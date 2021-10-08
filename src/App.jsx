@@ -1,52 +1,55 @@
+// react things
 import React from "react"
-import { 
-  BrowserRouter, 
+import {  
   Route, 
   Switch 
 } from "react-router-dom"
-import Nav from "./utils-components/nav/Nav"
-import SideBar from "./utils-components/side-bar/SideBar"
-import Home from "./main-app/home/Home"
-
+// index page or home page
+import Home from './pages/Home'
+// authentication pages
 const Signup = React.lazy(() => 
-  import('./accounts/containers/user-auth/Signup')
+  import('./pages/Signup')
   .then(Signup => Signup)
   .catch(err => console.log(err))
 )
-
 const Login = React.lazy(() => 
-  import('./accounts/containers/user-auth/Login')
+  import('./pages/Login')
   .then(Login => Login)
   .catch(err => console.log(err))
 )
+// not found
+const NotFound = React.lazy(() => 
+  import('./components/NotFound')
+  .then(NotFound => NotFound)
+  .catch(err => console.log(err))
+)
 
-function App() {
-  return (
-    <div className="App">
-      <BrowserRouter>
-        <header className="App-header">
-          <Nav/>
-        </header>
-        <main className="App-main">
-          <div className="App-main-sidebar">
-            <SideBar/>
-          </div>
-          <div className="App-main-container">
-            <React.Suspense fallback={<h1>Loading ...</h1>}>
-              <Switch>
-                <Route exact path="/" component={Home} />
-                <Route path="/login" component={Login} />
-                <Route path="/signup" component={Signup} />
-              </Switch>
-            </React.Suspense>
-          </div>
+
+
+class App extends React.Component {
+  render(){
+    return (
+      <>
+        <main 
+          className="App container"
+          style={appStyle}
+        >
+          <React.Suspense fallback={"Loading please wait ..."}>
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route path="/login" component={Login} />
+              <Route path="/signup" component={Signup} />
+              <Route component={NotFound} />
+            </Switch>
+          </React.Suspense>
         </main>
-        <footer className="App-footer">
-          footer
-        </footer>
-      </BrowserRouter>
-    </div>
-  )
+      </>
+    )
+  }
+}
+
+const appStyle = {
+  paddingBottom: '5rem'
 }
 
 export default App

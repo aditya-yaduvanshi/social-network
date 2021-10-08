@@ -1,5 +1,4 @@
 
-
 class Auth {
   static initialState = {
     token: localStorage.getItem('token'),
@@ -39,26 +38,5 @@ class Auth {
   }
 }
 
-class Alert {
-  static initialState = []
 
-  static async alert (state=initialState, action) {
-    switch(action.type){
-      case 'SUCCESS':
-        //
-      case 'ERROR': 
-        //
-      default:
-        //
-    }
-  }
-}
-
-
-const auth = Auth.auth
-const alert = Alert.alert
-
-export {
-  auth,
-  alert
-}
+export default Auth

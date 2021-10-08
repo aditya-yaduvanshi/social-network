@@ -1,12 +1,10 @@
-import './Home.scss'
 import React from 'react'
-
 
 class Home extends React.Component {
   render(){
     return (
       <>
-        Home
+        <h1 className="text-center">Welcome To Social Network Home Page!</h1>
       </>
     )
   }

@@ -4,36 +4,34 @@ import {
   Route, 
   Switch 
 } from "react-router-dom"
+
 // index page or home page
-import Home from './pages/Home'
+import Home from './pages/home/Home'
+import './App.scss'
 // authentication pages
 const Signup = React.lazy(() => 
-  import('./pages/Signup')
+  import('./pages/signup/Signup')
   .then(Signup => Signup)
   .catch(err => console.log(err))
 )
 const Login = React.lazy(() => 
-  import('./pages/Login')
+  import('./pages/login/Login')
   .then(Login => Login)
   .catch(err => console.log(err))
 )
 // not found
 const NotFound = React.lazy(() => 
-  import('./components/NotFound')
+  import('./components/not-found/NotFound')
   .then(NotFound => NotFound)
   .catch(err => console.log(err))
 )
-
 
 
 class App extends React.Component {
   render(){
     return (
       <>
-        <main 
-          className="App container"
-          style={appStyle}
-        >
+        <main className="App container">
           <React.Suspense fallback={"Loading please wait ..."}>
             <Switch>
               <Route exact path="/" component={Home} />
@@ -46,10 +44,6 @@ class App extends React.Component {
       </>
     )
   }
-}
-
-const appStyle = {
-  paddingBottom: '5rem'
 }
 
 export default App

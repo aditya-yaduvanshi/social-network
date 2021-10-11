@@ -6,7 +6,7 @@ class Auth {
     loading: false
   }
 
-  static async auth (state=initialState, action) {
+  static async auth (state=Auth.initialState, action) {
     switch(action.type){
       case 'LOGIN_SUCCESS':
         localStorage.setItem('token',action.payload.access)

@@ -1,8 +1,9 @@
 import React from "react"
+import "./Signup.scss"
 
 // components
-import InputField from "../components/InputField"
-import Button from "../components/Button"
+import InputField from "../../components/input-field/InputField"
+import Button from "../../components/button/Button"
 
 
 class Signup extends React.Component {
@@ -21,15 +22,14 @@ class Signup extends React.Component {
     
     return (
       <>
-        <div style={signupStyle}>
-          <div style={signupWrapStyle}>
+        <div className="signup">
+          <div className="signup-wrap">
             <h1 className="text-center">
               Create A New Account
             </h1>
             <form 
               onSubmit={this.handleSubmit}
-              style={formStyle}
-              className="row"
+              className="form"
             >
               <InputField 
                 className="form-control"
@@ -95,25 +95,5 @@ class Signup extends React.Component {
   }
 }
 
-const signupStyle = {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  flexDirection: 'column'
-}
-const signupWrapStyle = {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  flexDirection: 'column',
-  maxWidth: '512px',
-  minWidth: '240px',
-  border: '1px solid black',
-  padding: '2rem 2rem 3rem',
-  background: 'white'
-}
-const formStyle = {
-  width: '100%'
-}
 
 export default Signup

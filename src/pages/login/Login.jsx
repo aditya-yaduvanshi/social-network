@@ -1,8 +1,9 @@
 import React from "react"
+import "./Login.scss"
 
 // components
-import InputField from "../components/InputField"
-import Button from "../components/Button"
+import InputField from "../../components/input-field/InputField"
+import Button from "../../components/button/Button"
 
 
 class Login extends React.Component {
@@ -21,15 +22,14 @@ class Login extends React.Component {
     
     return (
       <>
-        <div style={loginStyle}>
-          <div style={loginWrapStyle}>
+        <div className="login">
+          <div className="login-wrap">
             <h1 className="text-center">
               Log In To Your Account
             </h1>
             <form 
               onSubmit={this.handleSubmit}
               className="form"
-              style={formStyle}
             >
               <InputField 
                 className="form-control"
@@ -64,25 +64,5 @@ class Login extends React.Component {
   }
 }
 
-const loginStyle = {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  flexDirection: 'column'
-}
-const loginWrapStyle = {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  flexDirection: 'column',
-  maxWidth: '512px',
-  minWidth: '240px',
-  border: '1px solid black',
-  padding: '2rem 2rem 3rem',
-  background: 'white'
-}
-const formStyle = {
-  width: '100%'
-}
 
 export default Login

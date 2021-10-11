@@ -1,5 +1,6 @@
 import React from "react"
 import loadingGif from '../assets/loading.gif'
+import "./Loading.scss"
 
 class Loading extends React.Component {
   render(){

@@ -4,8 +4,7 @@ import ReactDOM from 'react-dom'
 
 // app
 import App from './App'
-import Header from './components/Header'
-import './index.css'
+import Header from './components/header/Header'
 
 // router
 import { BrowserRouter as Router } from 'react-router-dom'

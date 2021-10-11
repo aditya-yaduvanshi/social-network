@@ -1,4 +1,5 @@
 import React from "react"
+import "./InputField.scss"
 
 
 class InputField extends React.Component {
@@ -11,13 +12,7 @@ class InputField extends React.Component {
       <>
         <div 
           className={`field`} 
-          style={fieldStyle}
         >
-          <label 
-            className={`form-label`}
-            htmlFor={this.props.name}
-            style={labelStyle}
-          >{this.props.placeholder}</label>
           <input 
             className={`field-input ${this.props.className}`}
             type={this.props.type}
@@ -25,22 +20,19 @@ class InputField extends React.Component {
             minLength={this.props.minLength}
             autoComplete={this.props.autoComplete}
             onChange={this.props.handleChange}
+            placeholder={this.props.placeholder}
             required
-            style={inputStyle}
           />
+          <label 
+            className={`field-label form-label`}
+            htmlFor={this.props.name}
+          >{this.props.placeholder}</label>
           { this.props.children }
         </div>
       </>
     )
   }
 }
-
-const fieldStyle = {
-  marginBottom: '3px',
-  marginTop: '3px'
-}
-const labelStyle = {}
-const inputStyle = {}
 
 
 export default InputField

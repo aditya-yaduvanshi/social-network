@@ -1,12 +1,13 @@
 import React from "react"
 import { NavLink } from "react-router-dom"
+import "./Header.scss"
 
 
 class Header extends React.Component {
   render(){
     return (
       <>
-        <header className="container">
+        <header className="container-fluid bg-white">
           <nav className="navbar">
             <div className="navbar-brand">
               <NavLink 

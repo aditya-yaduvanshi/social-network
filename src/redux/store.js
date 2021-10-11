@@ -1,11 +1,11 @@
 /*
 import { createStore } from 'redux'
-import Auth from './reducers/auth'
+import allReducers from './reducers'
 
 const initialState = {}
 const store = createStore({
   initialState,
-  Auth
+  allReducers
 })
 
 export default store

@@ -1,0 +1,39 @@
+.field {
+  margin: 20px 0;
+  position: relative;
+  height: 50px;
+
+  &-label {
+    position: absolute;
+    left: 3%;
+    top: 14%;
+    cursor: text;
+    transition: all 0.3s;
+    background: white;
+    padding: 5px;
+    color: gray;
+  }
+
+  &-input {
+    height: 100%;
+    padding-top: 15px;
+    font-size: 1.1em;
+
+    &::placeholder {
+      color: transparent;
+    }
+  }
+}
+
+
+.field-input:focus + .field-label,
+.field-input:not(:placeholder-shown) + .field-label {
+  left: 2%;
+  top: -30%;
+  font-size: 0.9em;
+} 
+
+input:-webkit-autofill{
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  box-shadow: 0 0 0 30px white inset !important;
+}

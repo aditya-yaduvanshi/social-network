@@ -1,4 +1,5 @@
 import React from "react"
+import Auth from "../../redux/actions/auth"
 import "./Signup.scss"
 
 // components
@@ -7,15 +8,29 @@ import Button from "../../components/button/Button"
 
 
 class Signup extends React.Component {
+  constructor(){
+    super()
+    this.state = {
+      formData: {
+        name: '',
+        email: '',
+        phone: '',
+        password: '',
+        password2: ''
+      }
+    }
+  }
 
   handleSubmit (event) {
     event.preventDefault()
-    alert('form submitted')
+    Auth.signup(...this.state.formData)
   }
 
   handleChange (event) {
-    event.preventDefault()
-    console.log(event.target.value)
+    this.setState({
+      ...this.state.formData,
+      [event.target.name]: event.target.value
+    })
   }
 
   render(){
@@ -34,7 +49,7 @@ class Signup extends React.Component {
               <InputField 
                 className="form-control"
                 type="text"
-                name="fname"
+                name="name"
                 autoComplete="fullname"
                 placeholder="your full name..."
                 onChange={this.handleChange}
@@ -65,7 +80,7 @@ class Signup extends React.Component {
                 className="form-control"
                 type="password"
                 minLength="6"
-                name="new-password"
+                name="password"
                 autoComplete="new-password"
                 placeholder="set new password..."
                 onChange={this.handleChange}
@@ -76,7 +91,7 @@ class Signup extends React.Component {
                 className="form-control"
                 type="password"
                 minLength="6"
-                name="conf-password"
+                name="password2"
                 autoComplete="confirm-password"
                 placeholder="confirm password..."
                 onChange={this.handleChange}

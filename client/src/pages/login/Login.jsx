@@ -1,4 +1,5 @@
 import React from "react"
+import Auth from "../../redux/actions/auth"
 import "./Login.scss"
 
 // components
@@ -7,15 +8,26 @@ import Button from "../../components/button/Button"
 
 
 class Login extends React.Component {
+  constructor(){
+    super()
+    this.state = {
+      formData: {
+        username: '',
+        password: ''
+      }
+    }
+  }
 
   handleSubmit (event) {
     event.preventDefault()
-    alert('form submitted')
+    Auth.login(...this.state.formData)
   }
 
   handleChange (event) {
-    event.preventDefault()
-    console.log(event.target.value)
+    this.setState({
+      ...this.state.formData,
+      [event.target.name]: event.target.value 
+    })
   }
 
   render(){
@@ -45,7 +57,7 @@ class Login extends React.Component {
                 className="form-control"
                 type="password"
                 minLength="6"
-                name="login-password"
+                name="password"
                 autoComplete="current-password"
                 placeholder="current login password..."
                 onChange={this.handleChange}

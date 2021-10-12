@@ -1,5 +1,6 @@
 import React from "react"
-import Auth from "../../redux/actions/auth"
+import { login } from "../../redux/actions/auth"
+import { Redirect, Link } from "react-router-dom"
 import "./Login.scss"
 
 // components
@@ -8,8 +9,8 @@ import Button from "../../components/button/Button"
 
 
 class Login extends React.Component {
-  constructor(){
-    super()
+  constructor({login, loggedin}){
+    super({login, loggedin})
     this.state = {
       formData: {
         username: '',
@@ -20,7 +21,7 @@ class Login extends React.Component {
 
   handleSubmit (event) {
     event.preventDefault()
-    Auth.login(
+    login(
       this.state.formData.username,
       this.state.formData.password
     )
@@ -34,13 +35,15 @@ class Login extends React.Component {
   }
 
   render(){
+    if(this.props.loggedin)
+      return <Redirect to="/"/>
     
     return (
       <>
         <div className="login">
           <div className="login-wrap">
             <h1 className="text-center">
-              Log In To Your Account
+              Account Login
             </h1>
             <form 
               onSubmit={this.handleSubmit.bind(this)}
@@ -51,7 +54,8 @@ class Login extends React.Component {
                 type="text"
                 name="username"
                 autoComplete="current-username"
-                placeholder="username, phone or email..."
+                placeholder="Username, Phone or Email"
+                value={this.state.formData.username}
                 onChange={this.handleChange.bind(this)}
                 required
                 key="login-username"
@@ -62,7 +66,8 @@ class Login extends React.Component {
                 minLength="6"
                 name="password"
                 autoComplete="current-password"
-                placeholder="current login password..."
+                placeholder="Current Login Password"
+                value={this.state.formData.password}
                 onChange={this.handleChange.bind(this)}
                 required
                 key="login-password"
@@ -72,6 +77,20 @@ class Login extends React.Component {
                 className="btn btn-primary w-100"
               > Log In </Button>
             </form>
+            <h6 className="d-flex mt-3">
+              Don't have an account? 
+              <Link to="/signup"> Sign Up </Link>
+            </h6>
+            <div className="oauth">
+              <Button
+                type="button"
+                className="btn btn-danger w-100"
+              > Google </Button>
+              <Button
+                type="button"
+                className="btn btn-primary w-100"
+              > Facebook </Button>
+            </div>
           </div>
         </div>
       </>

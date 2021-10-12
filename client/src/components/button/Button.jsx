@@ -15,8 +15,9 @@ class Button extends React.Component {
             type={this.props.type} 
             onClick={this.props.onClick}
             className={this.props.className}
+            {...this.props}
           >
-            {this.props.children}
+            <b>{this.props.children}</b>
           </button>
         </div>
       </>

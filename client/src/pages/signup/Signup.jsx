@@ -1,15 +1,16 @@
 import React from "react"
-import Auth from "../../redux/actions/auth"
+import { signup } from "../../redux/actions/auth"
 import "./Signup.scss"
 
 // components
 import InputField from "../../components/input-field/InputField"
 import Button from "../../components/button/Button"
+import { Link } from "react-router-dom"
 
 
 class Signup extends React.Component {
-  constructor(){
-    super()
+  constructor({signup, loggedin}){
+    super({signup, loggedin})
     this.state = {
       formData: {
         name: '',
@@ -23,7 +24,7 @@ class Signup extends React.Component {
 
   handleSubmit (event) {
     event.preventDefault()
-    Auth.signup(
+    signup(
       this.state.formData.name,
       this.state.formData.email,
       this.state.formData.phone,
@@ -46,7 +47,7 @@ class Signup extends React.Component {
         <div className="signup">
           <div className="signup-wrap">
             <h1 className="text-center">
-              Create A New Account
+              Create Account
             </h1>
             <form 
               onSubmit={this.handleSubmit.bind(this)}
@@ -57,7 +58,8 @@ class Signup extends React.Component {
                 type="text"
                 name="name"
                 autoComplete="fullname"
-                placeholder="your full name..."
+                placeholder="Your Full Name."
+                value={this.state.formData.name}
                 onChange={this.handleChange.bind(this)}
                 required
                 key="signup-fname"
@@ -67,7 +69,8 @@ class Signup extends React.Component {
                 type="email"
                 name="email"
                 autoComplete="new-email"
-                placeholder="your email address..."
+                placeholder="Your Email Address."
+                value={this.state.formData.email}
                 onChange={this.handleChange.bind(this)}
                 required
                 key="signup-email"
@@ -77,7 +80,8 @@ class Signup extends React.Component {
                 type="number"
                 name="phone"
                 autoComplete="new-phone"
-                placeholder="your phone number..."
+                placeholder="Your Phone Number."
+                value={this.state.formData.phone}
                 onChange={this.handleChange.bind(this)}
                 required
                 key="signup-phone"
@@ -88,7 +92,8 @@ class Signup extends React.Component {
                 minLength="6"
                 name="password"
                 autoComplete="new-password"
-                placeholder="set new password..."
+                placeholder="Set New Password."
+                value={this.state.formData.password}
                 onChange={this.handleChange.bind(this)}
                 required
                 key="signup-password"
@@ -99,7 +104,8 @@ class Signup extends React.Component {
                 minLength="6"
                 name="password2"
                 autoComplete="confirm-password"
-                placeholder="confirm password..."
+                placeholder="Confirm Password."
+                value={this.state.formData.password2}
                 onChange={this.handleChange.bind(this)}
                 required
                 key="signup-password2"
@@ -109,6 +115,20 @@ class Signup extends React.Component {
                 type="submit"
               > Sign Up </Button>
             </form>
+            <h6 className="d-flex mt-3">
+              Already have an account? 
+              <Link to="/login"> Log In </Link>
+            </h6>
+            <div className="oauth">
+              <Button
+                type="button"
+                className="btn btn-danger w-100"
+              > Google </Button>
+              <Button
+                type="button"
+                className="btn btn-primary w-100"
+              > Facebook </Button>
+            </div>
           </div>
         </div>
       </>

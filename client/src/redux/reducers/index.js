@@ -1,9 +1,8 @@
 import { combineReducers } from "redux"
-import Auth from "./auth"
-import Alerts from "./alerts"
+import auth from "./auth"
+import alert from "./alerts"
 
-const auth = Auth.auth
-const alert = Alerts.alert
+
 const allReducers = combineReducers({
   auth,
   alert

@@ -8,7 +8,7 @@ class Auth {
       password
     })
     try {
-      const res = await axios.post("accounts/login", body)
+      const res = await axios.get("accounts/auth", body)
       dispatch({
         type: "LOGIN_SUCCESS",
         payload: res.data
@@ -30,13 +30,14 @@ class Auth {
       password2
     })
     try {
-      const res = await axios.post("accounts/signup", body)
+      const res = await axios.post("accounts/auth", body)
       dispatch({
         type: "SIGNUP_SUCCESS",
         payload: res.data
       })
       dispatch(Auth.login(email, password))
     } catch (err) {
+      console.log(err)
       dispatch({
         type: "SIGNUP_FAIL"
       })

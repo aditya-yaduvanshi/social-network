@@ -20,7 +20,10 @@ class Login extends React.Component {
 
   handleSubmit (event) {
     event.preventDefault()
-    Auth.login(...this.state.formData)
+    Auth.login(
+      this.state.formData.username,
+      this.state.formData.password
+    )
   }
 
   handleChange (event) {
@@ -40,7 +43,7 @@ class Login extends React.Component {
               Log In To Your Account
             </h1>
             <form 
-              onSubmit={this.handleSubmit}
+              onSubmit={this.handleSubmit.bind(this)}
               className="form"
             >
               <InputField 
@@ -49,7 +52,7 @@ class Login extends React.Component {
                 name="username"
                 autoComplete="current-username"
                 placeholder="username, phone or email..."
-                onChange={this.handleChange}
+                onChange={this.handleChange.bind(this)}
                 required
                 key="login-username"
               />
@@ -60,7 +63,7 @@ class Login extends React.Component {
                 name="password"
                 autoComplete="current-password"
                 placeholder="current login password..."
-                onChange={this.handleChange}
+                onChange={this.handleChange.bind(this)}
                 required
                 key="login-password"
               />

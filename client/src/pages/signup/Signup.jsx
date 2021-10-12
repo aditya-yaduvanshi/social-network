@@ -23,7 +23,13 @@ class Signup extends React.Component {
 
   handleSubmit (event) {
     event.preventDefault()
-    Auth.signup(...this.state.formData)
+    Auth.signup(
+      this.state.formData.name,
+      this.state.formData.email,
+      this.state.formData.phone,
+      this.state.formData.password,
+      this.state.formData.password2,
+    )
   }
 
   handleChange (event) {
@@ -43,7 +49,7 @@ class Signup extends React.Component {
               Create A New Account
             </h1>
             <form 
-              onSubmit={this.handleSubmit}
+              onSubmit={this.handleSubmit.bind(this)}
               className="form"
             >
               <InputField 
@@ -52,7 +58,7 @@ class Signup extends React.Component {
                 name="name"
                 autoComplete="fullname"
                 placeholder="your full name..."
-                onChange={this.handleChange}
+                onChange={this.handleChange.bind(this)}
                 required
                 key="signup-fname"
               />
@@ -62,7 +68,7 @@ class Signup extends React.Component {
                 name="email"
                 autoComplete="new-email"
                 placeholder="your email address..."
-                onChange={this.handleChange}
+                onChange={this.handleChange.bind(this)}
                 required
                 key="signup-email"
               />
@@ -72,7 +78,7 @@ class Signup extends React.Component {
                 name="phone"
                 autoComplete="new-phone"
                 placeholder="your phone number..."
-                onChange={this.handleChange}
+                onChange={this.handleChange.bind(this)}
                 required
                 key="signup-phone"
               />
@@ -83,7 +89,7 @@ class Signup extends React.Component {
                 name="password"
                 autoComplete="new-password"
                 placeholder="set new password..."
-                onChange={this.handleChange}
+                onChange={this.handleChange.bind(this)}
                 required
                 key="signup-password"
               />
@@ -94,7 +100,7 @@ class Signup extends React.Component {
                 name="password2"
                 autoComplete="confirm-password"
                 placeholder="confirm password..."
-                onChange={this.handleChange}
+                onChange={this.handleChange.bind(this)}
                 required
                 key="signup-password2"
               />

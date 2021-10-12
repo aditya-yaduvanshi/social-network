@@ -9,11 +9,6 @@ class Validate {
     let num = /^\d{10}$/
     return num.test(String(phone).toLowerCase())
   }
-
-  static async isValid (data) {
-    //
-    return true
-  }
 }
 
 module.exports = Validate

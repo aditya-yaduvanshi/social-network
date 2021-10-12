@@ -19,7 +19,7 @@ app.use(cors())
 app.get("/", async (req,res) => {
   res.send("Express server is ready!")
 })
-app.use("api/accounts", accounts)
+app.use("/api/accounts", accounts)
 
 
 

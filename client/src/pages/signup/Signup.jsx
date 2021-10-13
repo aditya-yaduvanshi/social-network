@@ -1,16 +1,19 @@
 import React from "react"
-import { signup } from "../../redux/actions/auth"
+import { connect } from "react-redux"
+import { signup, oauth } from "../../redux/actions/auth"
+import PropTypes from "prop-types"
 import "./Signup.scss"
 
 // components
 import InputField from "../../components/input-field/InputField"
 import Button from "../../components/button/Button"
-import { Link } from "react-router-dom"
+import OAuth from "../../components/oauth/OAuth"
+import { Link, Redirect } from "react-router-dom"
 
 
 class Signup extends React.Component {
-  constructor({signup, loggedin}){
-    super({signup, loggedin})
+  constructor({signup, oauth, loggedin}){
+    super({signup, oauth, loggedin})
     this.state = {
       formData: {
         name: '',
@@ -24,13 +27,17 @@ class Signup extends React.Component {
 
   handleSubmit (event) {
     event.preventDefault()
-    signup(
+    this.props.signup(
       this.state.formData.name,
       this.state.formData.email,
       this.state.formData.phone,
       this.state.formData.password,
       this.state.formData.password2,
     )
+  }
+
+  handleOAuth (res) {
+    console.log(res)
   }
 
   handleChange (event) {
@@ -41,6 +48,9 @@ class Signup extends React.Component {
   }
 
   render(){
+
+    if(this.props.loggedin)
+      return <Redirect to="/"/>
     
     return (
       <>
@@ -59,7 +69,6 @@ class Signup extends React.Component {
                 name="name"
                 autoComplete="fullname"
                 placeholder="Your Full Name."
-                value={this.state.formData.name}
                 onChange={this.handleChange.bind(this)}
                 required
                 key="signup-fname"
@@ -70,7 +79,6 @@ class Signup extends React.Component {
                 name="email"
                 autoComplete="new-email"
                 placeholder="Your Email Address."
-                value={this.state.formData.email}
                 onChange={this.handleChange.bind(this)}
                 required
                 key="signup-email"
@@ -81,7 +89,6 @@ class Signup extends React.Component {
                 name="phone"
                 autoComplete="new-phone"
                 placeholder="Your Phone Number."
-                value={this.state.formData.phone}
                 onChange={this.handleChange.bind(this)}
                 required
                 key="signup-phone"
@@ -93,7 +100,6 @@ class Signup extends React.Component {
                 name="password"
                 autoComplete="new-password"
                 placeholder="Set New Password."
-                value={this.state.formData.password}
                 onChange={this.handleChange.bind(this)}
                 required
                 key="signup-password"
@@ -105,7 +111,6 @@ class Signup extends React.Component {
                 name="password2"
                 autoComplete="confirm-password"
                 placeholder="Confirm Password."
-                value={this.state.formData.password2}
                 onChange={this.handleChange.bind(this)}
                 required
                 key="signup-password2"
@@ -119,16 +124,9 @@ class Signup extends React.Component {
               Already have an account? 
               <Link to="/login"> Log In </Link>
             </h6>
-            <div className="oauth">
-              <Button
-                type="button"
-                className="btn btn-danger w-100"
-              > Google </Button>
-              <Button
-                type="button"
-                className="btn btn-primary w-100"
-              > Facebook </Button>
-            </div>
+            <OAuth
+              onOAuth={this.handleOAuth.bind(this)}
+            />
           </div>
         </div>
       </>
@@ -136,5 +134,14 @@ class Signup extends React.Component {
   }
 }
 
+Signup.propTypes = {
+  signup: PropTypes.func.isRequired,
+  oauth: PropTypes.func.isRequired,
+  loggedin: PropTypes.bool
+}
 
-export default Signup
+const mapStateToProps = state => ({
+  loggedin: state.auth.loggedin
+})
+
+export default connect(mapStateToProps, {signup, oauth})(Signup)

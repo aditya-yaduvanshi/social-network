@@ -19,8 +19,7 @@ class InputField extends React.Component {
             name={this.props.name}
             minLength={this.props.minLength}
             autoComplete={this.props.autoComplete}
-            value={this.props.value}
-            onChange={this.props.handleChange}
+            onChange={this.props.onChange}
             placeholder={this.props.placeholder}
             required
           />

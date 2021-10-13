@@ -1,16 +1,19 @@
 import React from "react"
-import { login } from "../../redux/actions/auth"
+import { connect } from "react-redux"
+import PropTypes from "prop-types"
+import { login, oauth } from "../../redux/actions/auth"
 import { Redirect, Link } from "react-router-dom"
 import "./Login.scss"
 
 // components
 import InputField from "../../components/input-field/InputField"
 import Button from "../../components/button/Button"
+import OAuth from "../../components/oauth/OAuth"
 
 
 class Login extends React.Component {
-  constructor({login, loggedin}){
-    super({login, loggedin})
+  constructor({login, oauth, loggedin}){
+    super({login, oauth, loggedin})
     this.state = {
       formData: {
         username: '',
@@ -21,10 +24,14 @@ class Login extends React.Component {
 
   handleSubmit (event) {
     event.preventDefault()
-    login(
+    this.props.login(
       this.state.formData.username,
       this.state.formData.password
     )
+  }
+
+  handleOAuth (res) {
+    console.log(res)
   }
 
   handleChange (event) {
@@ -55,7 +62,6 @@ class Login extends React.Component {
                 name="username"
                 autoComplete="current-username"
                 placeholder="Username, Phone or Email"
-                value={this.state.formData.username}
                 onChange={this.handleChange.bind(this)}
                 required
                 key="login-username"
@@ -67,7 +73,6 @@ class Login extends React.Component {
                 name="password"
                 autoComplete="current-password"
                 placeholder="Current Login Password"
-                value={this.state.formData.password}
                 onChange={this.handleChange.bind(this)}
                 required
                 key="login-password"
@@ -81,16 +86,9 @@ class Login extends React.Component {
               Don't have an account? 
               <Link to="/signup"> Sign Up </Link>
             </h6>
-            <div className="oauth">
-              <Button
-                type="button"
-                className="btn btn-danger w-100"
-              > Google </Button>
-              <Button
-                type="button"
-                className="btn btn-primary w-100"
-              > Facebook </Button>
-            </div>
+            <OAuth 
+              onOAuth={this.handleOAuth.bind(this)}
+            />
           </div>
         </div>
       </>
@@ -98,5 +96,14 @@ class Login extends React.Component {
   }
 }
 
+Login.propTypes = {
+  login: PropTypes.func.isRequired,
+  oauth: PropTypes.func.isRequired,
+  loggedin: PropTypes.bool
+}
 
-export default Login
+const mapStateToProps = state => ({
+  loggedin: state.auth.loggedin
+})
+
+export default connect(mapStateToProps, {login, oauth})(Login)

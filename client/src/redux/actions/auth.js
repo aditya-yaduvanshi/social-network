@@ -1,7 +1,7 @@
 import axios from "axios"
 import setAlert from "./alerts"
 
-const login = (username, password) => async (dispatch) => {
+const login = (username, password) => async dispatch => {
   const body = JSON.stringify({
     username,
     password

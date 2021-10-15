@@ -1,11 +1,10 @@
-import { combineReducers } from "redux"
-import auth from "./auth"
-import alert from "./alerts"
-
+import {combineReducers} from "redux";
+import auth from "./auth";
+import alert from "./alerts";
 
 const allReducers = combineReducers({
   auth,
-  alert
-})
+  alert,
+});
 
-export default allReducers
+export default allReducers;

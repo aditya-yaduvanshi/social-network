@@ -1,14 +1,13 @@
-
-const initialState=[]
-const alert = (state=initialState, action) => {
-  switch(action.type){
+const initialState = [];
+const alert = (state = initialState, action) => {
+  switch (action.type) {
     case "SET":
-      return [...state, action.payload]
+      return [...state, action.payload];
     case "REMOVE":
-      return state.filter(alert => alert.id !== action.payload)
+      return state.filter((alert) => alert.id !== action.payload);
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default alert
+export default alert;

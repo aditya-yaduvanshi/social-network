@@ -1,69 +1,58 @@
-import React from "react"
-import { connect } from "react-redux"
-import { signup, oauth } from "../../redux/actions/auth"
-import PropTypes from "prop-types"
-import "./Signup.scss"
+import React from "react";
+import {connect} from "react-redux";
+import {signup, oauth} from "../../redux/actions/auth";
+//import PropTypes from "prop-types";
+import "./Signup.scss";
 
 // components
-import InputField from "../../components/input-field/InputField"
-import Button from "../../components/button/Button"
-import OAuth from "../../components/oauth/OAuth"
-import { Link, Redirect } from "react-router-dom"
-
+import InputField from "../../components/input-field/InputField";
+import Button from "../../components/button/Button";
+import OAuth from "../../components/oauth/OAuth";
+import {Link, Redirect} from "react-router-dom";
 
 class Signup extends React.Component {
-  constructor({signup, oauth, loggedin}){
-    super({signup, oauth, loggedin})
+  constructor() {
+    super();
     this.state = {
-      formData: {
-        name: '',
-        email: '',
-        phone: '',
-        password: '',
-        password2: ''
-      }
-    }
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+      password2: "",
+    };
   }
 
-  handleSubmit (event) {
-    event.preventDefault()
-    this.props.signup(
-      this.state.formData.name,
-      this.state.formData.email,
-      this.state.formData.phone,
-      this.state.formData.password,
-      this.state.formData.password2,
-    )
+  handleSubmit(event) {
+    event.preventDefault();
+    this.props.signup({
+      name: this.state.name,
+      email: this.state.email,
+      phone: this.state.phone,
+      password: this.state.password,
+      password2: this.state.password2,
+    });
   }
 
-  handleOAuth (res) {
-    console.log(res)
+  handleOAuth(res) {
+    this.props.oauth(res)
   }
 
-  handleChange (event) {
+  handleChange(event) {
     this.setState({
-      ...this.state.formData,
-      [event.target.name]: event.target.value
-    })
+      [event.target.name]: event.target.value,
+    });
   }
 
-  render(){
+  render() {
+    if (this.props.loggedin) return <Redirect to="/" />;
 
-    if(this.props.loggedin)
-      return <Redirect to="/"/>
-    
     return (
       <>
         <div className="signup">
           <div className="signup-wrap">
-            <h1 className="text-center">
-              Create Account
-            </h1>
-            <form 
-              onSubmit={this.handleSubmit.bind(this)}
-              className="form"
-            >
-              <InputField 
+            <h1 className="text-center">Create Account</h1>
+            <form onSubmit={this.handleSubmit.bind(this)} className="form">
+              <InputField
                 className="form-control"
                 type="text"
                 name="name"
@@ -73,7 +62,7 @@ class Signup extends React.Component {
                 required
                 key="signup-fname"
               />
-              <InputField 
+              <InputField
                 className="form-control"
                 type="email"
                 name="email"
@@ -83,7 +72,7 @@ class Signup extends React.Component {
                 required
                 key="signup-email"
               />
-              <InputField 
+              <InputField
                 className="form-control"
                 type="number"
                 name="phone"
@@ -93,7 +82,7 @@ class Signup extends React.Component {
                 required
                 key="signup-phone"
               />
-              <InputField 
+              <InputField
                 className="form-control"
                 type="password"
                 minLength="6"
@@ -104,7 +93,7 @@ class Signup extends React.Component {
                 required
                 key="signup-password"
               />
-              <InputField 
+              <InputField
                 className="form-control"
                 type="password"
                 minLength="6"
@@ -115,33 +104,31 @@ class Signup extends React.Component {
                 required
                 key="signup-password2"
               />
-              <Button 
-                className="btn btn-success w-100"
-                type="submit"
-              > Sign Up </Button>
+              <Button className="btn btn-success w-100" type="submit">
+                Sign Up
+              </Button>
             </form>
             <h6 className="d-flex mt-3">
-              Already have an account? 
+              Already have an account?
               <Link to="/login"> Log In </Link>
             </h6>
-            <OAuth
-              onOAuth={this.handleOAuth.bind(this)}
-            />
+            <OAuth onOAuth={this.handleOAuth.bind(this)} />
           </div>
         </div>
       </>
-    )
+    );
   }
 }
 
+/*
 Signup.propTypes = {
   signup: PropTypes.func.isRequired,
   oauth: PropTypes.func.isRequired,
-  loggedin: PropTypes.bool
-}
+  loggedin: PropTypes.bool,
+};
+*/
+const mapStateToProps = (state) => ({
+  loggedin: state.auth.loggedin,
+});
 
-const mapStateToProps = state => ({
-  loggedin: state.auth.loggedin
-})
-
-export default connect(mapStateToProps, {signup, oauth})(Signup)
+export default connect(mapStateToProps, {signup, oauth})(Signup);

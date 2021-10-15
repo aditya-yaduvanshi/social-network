@@ -1,18 +1,17 @@
-import React from "react"
-import "./Button.scss"
-
+import React from "react";
+import "./Button.scss";
 
 class Button extends React.Component {
-  constructor(props){
-    super(props)
+  constructor(props) {
+    super(props);
   }
 
-  render(){
+  render() {
     return (
       <>
         <div className="mt-3">
-          <button 
-            type={this.props.type} 
+          <button
+            type={this.props.type}
             onClick={this.props.onClick}
             className={this.props.className}
             {...this.props}
@@ -21,9 +20,8 @@ class Button extends React.Component {
           </button>
         </div>
       </>
-    )
+    );
   }
 }
 
-
-export default Button
+export default Button;

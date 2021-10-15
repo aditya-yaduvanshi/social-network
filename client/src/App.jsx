@@ -1,34 +1,30 @@
 // react things
-import React from "react"
-import {  
-  Route, 
-  Switch 
-} from "react-router-dom"
+import React from "react";
+import {Route, Switch} from "react-router-dom";
 
 // index page or home page
-import Home from './pages/home/Home'
-import './App.scss'
+import Home from "./pages/home/Home";
+import "./App.scss";
 // authentication pages
-const Signup = React.lazy(() => 
-  import('./pages/signup/Signup')
-  .then(Signup => Signup)
-  .catch(err => console.log(err))
-)
-const Login = React.lazy(() => 
-  import('./pages/login/Login')
-  .then(Login => Login)
-  .catch(err => console.log(err))
-)
+const Signup = React.lazy(() =>
+  import("./pages/signup/Signup")
+    .then((Signup) => Signup)
+    .catch((err) => console.log(err))
+);
+const Login = React.lazy(() =>
+  import("./pages/login/Login")
+    .then((Login) => Login)
+    .catch((err) => console.log(err))
+);
 // not found
-const NotFound = React.lazy(() => 
-  import('./components/not-found/NotFound')
-  .then(NotFound => NotFound)
-  .catch(err => console.log(err))
-)
-
+const NotFound = React.lazy(() =>
+  import("./components/not-found/NotFound")
+    .then((NotFound) => NotFound)
+    .catch((err) => console.log(err))
+);
 
 class App extends React.Component {
-  render(){
+  render() {
     return (
       <>
         <main className="App container">
@@ -42,8 +38,8 @@ class App extends React.Component {
           </React.Suspense>
         </main>
       </>
-    )
+    );
   }
 }
 
-export default App
+export default App;

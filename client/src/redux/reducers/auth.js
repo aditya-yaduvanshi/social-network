@@ -1,39 +1,41 @@
-
 const initialState = {
-  token: localStorage.getItem('token'),
-  loggedin: localStorage.getItem('token') ? true : false,
-  loading: false
-}
+  token: localStorage.getItem("token"),
+  loggedin: localStorage.getItem("token") ? true : false,
+  loading: false,
+  user: ''
+};
 
-const auth = (state=initialState, action) => {
-  switch(action.type){
-    case 'LOGIN_SUCCESS':
-      localStorage.setItem('token',action.payload.access)
+const auth = (state = initialState, action) => {
+  switch (action.type) {
+    case "LOGIN_SUCCESS":
+      localStorage.setItem("token", action.payload.access);
       return {
         ...state,
         loggedin: true,
         loading: true,
-        token: action.payload.access
-      }
-    case 'SIGNUP_SUCCESS':
+        token: action.payload.access,
+        user: action.payload.user
+      };
+    case "SIGNUP_SUCCESS":
       return {
         ...state,
         loggedin: false,
-        loading: true
-      }
-    case 'SIGNUP_FAIL':
-    case 'LOGIN_FAIL':
-    case 'LOGOUT':
-      localStorage.removeItem('token')
+        loading: true,
+      };
+    case "SIGNUP_FAIL":
+    case "LOGIN_FAIL":
+    case "LOGOUT":
+      localStorage.removeItem("token");
       return {
         ...state,
         token: null,
         loggedin: false,
-        loading: false
-      }
+        loading: false,
+        user: ''
+      };
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default auth
+export default auth;

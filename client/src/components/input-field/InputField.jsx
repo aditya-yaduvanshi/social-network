@@ -1,19 +1,16 @@
-import React from "react"
-import "./InputField.scss"
-
+import React from "react";
+import "./InputField.scss";
 
 class InputField extends React.Component {
-  constructor(props){
-    super(props)
+  constructor(props) {
+    super(props);
   }
 
-  render(){
+  render() {
     return (
       <>
-        <div 
-          className={`field`} 
-        >
-          <input 
+        <div className={`field`}>
+          <input
             className={`field-input ${this.props.className}`}
             type={this.props.type}
             name={this.props.name}
@@ -23,16 +20,14 @@ class InputField extends React.Component {
             placeholder={this.props.placeholder}
             required
           />
-          <label 
-            className={`field-label form-label`}
-            htmlFor={this.props.name}
-          >{this.props.placeholder}</label>
-          { this.props.children }
+          <label className={`field-label form-label`} htmlFor={this.props.name}>
+            {this.props.placeholder}
+          </label>
+          {this.props.children}
         </div>
       </>
-    )
+    );
   }
 }
 
-
-export default InputField
+export default InputField;

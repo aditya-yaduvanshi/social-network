@@ -1,19 +1,16 @@
-import React from "react"
-import "./Footer.scss"
-
+import React from "react";
+import "./Footer.scss";
 
 class Footer extends React.Component {
-  render(){
+  render() {
     return (
       <>
         <footer>
-          <div>
-          </div>
+          <div>Footer</div>
         </footer>
       </>
-    )
+    );
   }
 }
 
-
-export default Footer
+export default Footer;

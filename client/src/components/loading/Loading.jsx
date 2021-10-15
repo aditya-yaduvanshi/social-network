@@ -1,9 +1,9 @@
-import React from "react"
-import loadingGif from '../assets/loading.gif'
-import "./Loading.scss"
+import React from "react";
+import loadingGif from "../assets/loading.gif";
+import "./Loading.scss";
 
 class Loading extends React.Component {
-  render(){
+  render() {
     return (
       <>
         <div className="container">
@@ -11,8 +11,8 @@ class Loading extends React.Component {
           <h1>Loading please wait ...</h1>
         </div>
       </>
-    )
+    );
   }
 }
 
-export default Loading
+export default Loading;

@@ -51,12 +51,12 @@ router.post("/auth", async (req, res, next) => {
         password: data.password,
       });
       let newuser = await user.save();
-      if (newuser) return res.status(201);
-      else return res.status(500);
-    } else return res.status(400);
+      if (newuser) return res.status(201).json({"success": "Account created successfully!"});
+      else return res.status(500).json({"error": "Something went wrong!"});
+    } else return res.status(400).json({"error": "Invalid data!"});
   } catch (err) {
     console.log(err);
-    return res.status(400);
+    return res.status(400).json({"error": "Invalid data!"});
   }
 });
 

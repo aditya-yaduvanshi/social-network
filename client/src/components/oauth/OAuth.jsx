@@ -2,9 +2,6 @@ import React from "react";
 import Button from "../button/Button";
 
 class OAuth extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   render() {
     return (

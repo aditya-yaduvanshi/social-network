@@ -2,9 +2,6 @@ import React from "react";
 import "./InputField.scss";
 
 class InputField extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   render() {
     return (

@@ -3,6 +3,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  padding: 2rem;
 
   &-wrap {
     display: flex;
@@ -22,5 +23,23 @@
 
   .oauth {
     width: 100%;
+  }
+
+  .auth-links {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+
+    & a {
+      padding: 5px 10px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: all 0.2s;
+
+      &:hover {
+        background: rgba(0,0,0,0.1);
+      }
+    }
   }
 }

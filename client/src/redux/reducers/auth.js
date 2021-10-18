@@ -2,7 +2,8 @@ const initialState = {
   token: localStorage.getItem("token"),
   loggedin: localStorage.getItem("token") ? true : false,
   loading: false,
-  user: localStorage.getItem("user") ? localStorage.getItem("user") : ''
+  resetted: false,
+  user: localStorage.getItem("user") ? localStorage.getItem("user") : '',
 };
 
 const auth = (state = initialState, action) => {
@@ -35,6 +36,23 @@ const auth = (state = initialState, action) => {
         loading: false,
         user: ''
       };
+    case "RESET_SUCCESS":
+      return {
+        ...state,
+        loading: false,
+        resetted: true
+      }
+    case "RESET_FAIL":
+      return {
+        ...state,
+        loading: false,
+        resetted: false
+      }
+    case "AUTH_LOADING":
+      return {
+        ...state,
+        loading: true
+      }
     default:
       return state;
   }

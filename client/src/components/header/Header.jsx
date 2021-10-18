@@ -33,8 +33,8 @@ class Header extends React.Component {
         <header className="container-fluid bg-primary sticky-top">
           <nav className="navbar">
             <div className="navbar-brand">
-              <NavLink to="/" className="navbar-brand text-white">
-                Social Network
+              <NavLink to="/" className="nav-link text-white">
+                Socio
               </NavLink>
             </div>
             <form 
@@ -54,7 +54,7 @@ class Header extends React.Component {
               />
             </form>
             <div className="navbar">
-              <NavLink to="/" className="nav-link active text-white">
+              <NavLink to="/" className="nav-link text-white">
                 Home
               </NavLink>
               {this.props.loggedin ? (
@@ -65,7 +65,7 @@ class Header extends React.Component {
                   > { this.props.user.split("@", 10)[0] } </NavLink>
                   <NavLink
                     to="#!"
-                    className="btn btn-danger nav-link text-white"
+                    className="btn btn-danger text-white"
                     onClick={this.handleClick.bind(this)}
                   > Logout </NavLink>
                 </>

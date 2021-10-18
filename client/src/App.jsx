@@ -5,6 +5,7 @@ import {Route, Switch} from "react-router-dom";
 // index page or home page
 import Home from "./pages/home/Home";
 import "./App.scss";
+import ResetPassword from "./pages/reset-password/ResetPassword"
 // authentication pages
 const Signup = React.lazy(() =>
   import("./pages/signup/Signup")
@@ -28,11 +29,12 @@ class App extends React.Component {
     return (
       <>
         <main className="App container">
-          <React.Suspense fallback={"Loading please wait ..."}>
+          <React.Suspense fallback={"LOADING"}>
             <Switch>
               <Route exact path="/" component={Home} />
               <Route path="/login" component={Login} />
               <Route path="/signup" component={Signup} />
+              <Route path="/reset-password" component={ResetPassword}/>
               <Route component={NotFound} />
             </Switch>
           </React.Suspense>

@@ -1,14 +1,16 @@
 import React from "react";
 import {connect} from "react-redux";
-import {signup, oauth} from "../../redux/actions/auth";
+import {signup} from "../../redux/actions/auth";
 //import PropTypes from "prop-types";
 import "./Signup.scss";
+import Loader from "../../components/loader/Loader";
 
 // components
 import InputField from "../../components/input-field/InputField";
 import Button from "../../components/button/Button";
-import OAuth from "../../components/oauth/OAuth";
+//import OAuth from "../../components/oauth/OAuth";
 import {Link, Redirect} from "react-router-dom";
+import Loading from "../../components/loading/Loading";
 
 class Signup extends React.Component {
   constructor() {
@@ -33,9 +35,9 @@ class Signup extends React.Component {
     });
   }
 
-  handleOAuth(res) {
-    this.props.oauth(res)
-  }
+  //handleOAuth(res) {
+  //  this.props.oauth(res);
+  //}
 
   handleChange(event) {
     this.setState({
@@ -45,6 +47,8 @@ class Signup extends React.Component {
 
   render() {
     if (this.props.loggedin) return <Redirect to="/" />;
+
+    if(this.props.loading) return <Loading/>
 
     return (
       <>
@@ -104,15 +108,21 @@ class Signup extends React.Component {
                 required
                 key="signup-password2"
               />
-              <Button className="btn btn-success w-100" type="submit">
-                Sign Up
+              <Button
+                className={`btn btn-success w-100${this.props.loading ? " field-button-disabled" : ""}`}
+                type="submit"
+                key="signup-button"
+              >
+                {this.props.loading ? (
+                  <Loader width="20" height="20"/>
+                ) : (
+                  "Sign Up"
+                )}
               </Button>
             </form>
-            <h6 className="d-flex mt-3">
-              Already have an account?
-              <Link to="/login"> Log In </Link>
-            </h6>
-            <OAuth onOAuth={this.handleOAuth.bind(this)} />
+            <div className="auth-links">
+              <Link to="/login"> Login To Account </Link>
+            </div>
           </div>
         </div>
       </>
@@ -120,15 +130,9 @@ class Signup extends React.Component {
   }
 }
 
-/*
-Signup.propTypes = {
-  signup: PropTypes.func.isRequired,
-  oauth: PropTypes.func.isRequired,
-  loggedin: PropTypes.bool,
-};
-*/
 const mapStateToProps = (state) => ({
   loggedin: state.auth.loggedin,
+  loading: state.auth.loading,
 });
 
-export default connect(mapStateToProps, {signup, oauth})(Signup);
+export default connect(mapStateToProps, {signup})(Signup);

@@ -19,6 +19,10 @@ const AccountSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  verified: {
+    email: false,
+    phone: false
+  }
 });
 
 module.exports = mongoose.model("Accounts", AccountSchema);

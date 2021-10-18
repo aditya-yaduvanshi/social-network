@@ -7,10 +7,10 @@ class OAuth extends React.Component {
     return (
       <>
         <div className="oauth">
-          <Button type="button" className="btn btn-danger w-100">
+          <Button type="button" className="btn btn-danger w-100" key="google-button">
             Google
           </Button>
-          <Button type="button" className="btn btn-primary w-100">
+          <Button type="button" className="btn btn-primary w-100" key="fb-button">
             Facebook
           </Button>
         </div>

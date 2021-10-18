@@ -3,6 +3,7 @@ import axios from "axios";
 
 const login = (user) => {
   return async (dispatch) => {
+    dispatch({type: "AUTH_LOADING"})
     return axios
       .get(`accounts/auth?username=${user.username}&password=${user.password}`)
       .then((res) => {
@@ -12,7 +13,6 @@ const login = (user) => {
         });
       })
       .catch((err) => {
-        console.log(err);
         dispatch({
           type: "LOGIN_FAIL",
         });
@@ -22,7 +22,7 @@ const login = (user) => {
 
 const signup = (user) => {
   return async (dispatch) => {
-    console.log("dispatched")
+    dispatch({type: "AUTH_LOADING"})
     return axios
       .post("accounts/auth", user)
       .then((res) => {
@@ -37,7 +37,6 @@ const signup = (user) => {
         );
       })
       .catch((err) => {
-        console.log(err);
         dispatch({
           type: "SIGNUP_FAIL",
         });
@@ -47,6 +46,7 @@ const signup = (user) => {
 
 const oauth = (user) => {
   return async (dispatch) => {
+    dispatch({type: "AUTH_LOADING"})
     return axios
       .post("accounts/oauth", JSON.stringify(user))
       .then((res) => {
@@ -56,7 +56,6 @@ const oauth = (user) => {
         });
       })
       .catch((err) => {
-        console.log(err);
         dispatch({
           type: "LOGIN_FAIL",
         });
@@ -64,6 +63,23 @@ const oauth = (user) => {
   };
 };
 
+const reset = (user) => {
+  return async (dispatch) => {
+    dispatch({type: "AUTH_LOADING"})
+    return axios
+      .put("accounts/auth", JSON.stringify(user))
+      .then(res => {
+        dispatch({
+          type: "RESET_SUCCESS",
+          payload: res.data
+        })
+      })
+      .catch(err => {
+        dispatch({type: "RESET_FAIL"})
+      })
+  }
+}
+
 const logout = () => ({type: "LOGOUT"});
 
-export {logout, login, signup, oauth};
+export {logout, login, signup, reset, oauth};

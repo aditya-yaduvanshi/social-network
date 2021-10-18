@@ -12,12 +12,30 @@
     background: white;
     padding: 5px;
     color: gray;
+
+    &-search {
+      padding: 0;
+      background: none;
+      top: 25%;
+    }
   }
 
   &-input {
     height: 100%;
+    width: 100%;
     padding-top: 15px;
     font-size: 1.1em;
+    outline: none;
+
+    &-search {
+      padding: 5px 5px 0;
+      background: rgb(255,255,255);
+      border: none;
+
+      &:hover {
+        background: rgb(245,245,245);
+      }
+    }
 
     &::placeholder {
       color: transparent;
@@ -32,6 +50,13 @@
   top: -30%;
   font-size: 0.9em;
 } 
+
+.field-input:focus + .field-label-search,
+.field-input:not(:placeholder-shown) + .field-label-search {
+  left: 2%;
+  top: 0%;
+  font-size: 0.9em;
+}
 
 input:-webkit-autofill{
   -webkit-box-shadow: 0 0 0 30px white inset !important;

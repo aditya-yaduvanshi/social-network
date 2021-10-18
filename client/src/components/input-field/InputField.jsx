@@ -9,9 +9,9 @@ class InputField extends React.Component {
   render() {
     return (
       <>
-        <div className={`field`}>
+        <div className={`field ${this.props.fieldClass}`}>
           <input
-            className={`field-input ${this.props.className}`}
+            className={`field-input ${this.props.className} ${this.props.inputClass}`}
             type={this.props.type}
             name={this.props.name}
             minLength={this.props.minLength}
@@ -20,7 +20,7 @@ class InputField extends React.Component {
             placeholder={this.props.placeholder}
             required
           />
-          <label className={`field-label form-label`} htmlFor={this.props.name}>
+          <label className={`field-label ${this.props.labelClass}`} htmlFor={this.props.name}>
             {this.props.placeholder}
           </label>
           {this.props.children}

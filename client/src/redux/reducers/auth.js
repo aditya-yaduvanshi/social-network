@@ -2,13 +2,14 @@ const initialState = {
   token: localStorage.getItem("token"),
   loggedin: localStorage.getItem("token") ? true : false,
   loading: false,
-  user: ''
+  user: localStorage.getItem("user") ? localStorage.getItem("user") : ''
 };
 
 const auth = (state = initialState, action) => {
   switch (action.type) {
     case "LOGIN_SUCCESS":
       localStorage.setItem("token", action.payload.access);
+      localStorage.setItem("user", action.payload.user)
       return {
         ...state,
         loggedin: true,
@@ -26,6 +27,7 @@ const auth = (state = initialState, action) => {
     case "LOGIN_FAIL":
     case "LOGOUT":
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
       return {
         ...state,
         token: null,

@@ -1,27 +1,34 @@
 const router = require("express").Router();
-const AccountSchema = require("./models");
-const Validate = require("../utils/validate");
+const {AccountSchema, TempUser} = require("./models");
+const {isEmail, sendMail} = require("./utils");
+const OTP = require("otp-generator");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 // login
 router.get("/auth", async (req, res, next) => {
   let data = req.query,
-    user,
-    email = await Validate.isEmail(data.username),
-    phone = await Validate.isPhone(data.username);
+    user;
   try {
-    if (email) {
-      user = await AccountSchema.findOne({
-        email: data.username,
-        password: data.password,
-      });
-    } else if (phone) {
-      user = await AccountSchema.findOne({
-        phone: data.username,
-        password: data.password,
-      });
-    } else return res.status(400);
+    if (!(await isEmail(data.email))) return res.sendStatus(400);
+    user = await AccountSchema.findOne({
+      email: data.email,
+    });
 
-    if (!user) return res.status(400);
+    if (!user) return res.sendStatus(400);
+
+    let match = bcrypt
+      .compare(data.password, user.password)
+      .then((result) => result);
+
+    if (!match) return res.sendStatus(400);
+
+    if (!user.active || !user.verified) {
+      return res.status(200).json({
+        status: 403,
+        msg: "Verification required!"
+      });
+    }
 
     return res.status(200).json({
       access: "bwjbyu678er82ijbwehgfvewe",
@@ -29,34 +36,106 @@ router.get("/auth", async (req, res, next) => {
     });
   } catch (err) {
     console.log(err);
-    return res.status(500);
+    return res.sendStatus(502);
   }
 });
 // signup
 router.post("/auth", async (req, res, next) => {
-  let data = req.body,
-    user;
+  let data = req.body;
   try {
     if (
-      (await Validate.isEmail(data.email)) &&
-      (await Validate.isPhone(data.phone)) &&
+      (await isEmail(data.email)) &&
       data.name &&
       data.password.length >= 6 &&
       data.password === data.password2
     ) {
-      user = AccountSchema({
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        password: data.password,
-      });
-      let newuser = await user.save();
-      if (newuser) return res.status(201).json({"success": "Account created successfully!"});
-      else return res.status(500).json({"error": "Something went wrong!"});
-    } else return res.status(400).json({"error": "Invalid data!"});
+      let hash = await bcrypt.hash(data.password, saltRounds),
+        user = await AccountSchema({
+          name: data.name,
+          email: data.email,
+          password: await hash,
+        }).save(),
+        urlId = OTP.generate(8),
+        tempUser = await TempUser({
+          email: data.email,
+          urlId,
+        }).save();
+      if (tempUser && user) {
+        sendMail(data.email, urlId)
+          .then((info) => info)
+          .catch((err) => console.log(err));
+        return res.sendStatus(201);
+      }
+    } else return res.sendStatus(400);
   } catch (err) {
     console.log(err);
-    return res.status(400).json({"error": "Invalid data!"});
+    return res.sendStatus(400);
+  }
+});
+
+// reset password
+router.get("/reset-password", async (req, res, next) => {
+  let user = await AccountSchema.findOne({email: req.query.email}),
+    resetOTP = OTP.generate(8);
+  if (!user) return res.sendStatus(404);
+  sendMail(user.email, resetOTP);
+});
+router.post("/reset-password", async (req, res, next) => {
+  let data = req.body,
+    user;
+  try {
+    if (await isEmail(data.email)) {
+      //
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// email verification
+router.put("/verify-email", async (req, res, next) => {
+  let data = req.body,
+    user;
+  try {
+    user = await TempUser.findOneAndDelete({
+      email: data.email,
+      urlId: data.urlId,
+    });
+    if (!user) return res.sendStatus(404);
+    if (new Date().getTime() - user.createdAt.getTime() > 86400000){
+      return res.sendStatus(400);
+    }
+
+    if (await user.delete()) {
+      let verifiedUser = await AccountSchema.findOneAndUpdate(
+        {
+          email: data.email,
+        },
+        {
+          verified: true,
+          active: true,
+        }
+      );
+      if (!verifiedUser) return res.sendStatus(502);
+
+      return res.sendStatus(200);
+    }
+  } catch (err) {
+    console.log(err);
+    return res.sendStatus(502);
+  }
+});
+
+router.get("/verify-email", async (req, res, next) => {
+  let email = req.query.email;
+  try {
+    let resetOTP = OTP.generate(8),
+      tempUser = await TempUser.findOneAndUpdate({email}, {urlId: resetOTP}),
+      info = await sendMail(email, resetOTP);
+    if (tempUser && info) return res.sendStatus(200);
+  } catch (err) {
+    console.log(err);
+    return res.sendStatus(404);
   }
 });
 

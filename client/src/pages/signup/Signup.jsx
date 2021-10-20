@@ -18,7 +18,6 @@ class Signup extends React.Component {
     this.state = {
       name: "",
       email: "",
-      phone: "",
       password: "",
       password2: "",
     };
@@ -29,7 +28,6 @@ class Signup extends React.Component {
     this.props.signup({
       name: this.state.name,
       email: this.state.email,
-      phone: this.state.phone,
       password: this.state.password,
       password2: this.state.password2,
     });
@@ -48,7 +46,9 @@ class Signup extends React.Component {
   render() {
     if (this.props.loggedin) return <Redirect to="/" />;
 
-    if(this.props.loading) return <Loading/>
+    if(this.props.signedup) return <Redirect to="/email-verification"/>;
+
+    if(this.props.loading) return <Loading/>;
 
     return (
       <>
@@ -63,6 +63,7 @@ class Signup extends React.Component {
                 autoComplete="fullname"
                 placeholder="Your Full Name."
                 onChange={this.handleChange.bind(this)}
+                value={this.state.name}
                 required
                 key="signup-fname"
               />
@@ -73,18 +74,9 @@ class Signup extends React.Component {
                 autoComplete="new-email"
                 placeholder="Your Email Address."
                 onChange={this.handleChange.bind(this)}
+                value={this.state.email}
                 required
                 key="signup-email"
-              />
-              <InputField
-                className="form-control"
-                type="number"
-                name="phone"
-                autoComplete="new-phone"
-                placeholder="Your Phone Number."
-                onChange={this.handleChange.bind(this)}
-                required
-                key="signup-phone"
               />
               <InputField
                 className="form-control"
@@ -94,6 +86,7 @@ class Signup extends React.Component {
                 autoComplete="new-password"
                 placeholder="Set New Password."
                 onChange={this.handleChange.bind(this)}
+                value={this.state.password}
                 required
                 key="signup-password"
               />
@@ -105,11 +98,12 @@ class Signup extends React.Component {
                 autoComplete="confirm-password"
                 placeholder="Confirm Password."
                 onChange={this.handleChange.bind(this)}
+                value={this.state.password2}
                 required
                 key="signup-password2"
               />
               <Button
-                className={`btn btn-success w-100${this.props.loading ? " field-button-disabled" : ""}`}
+                className={`btn btn-primary w-100${this.props.loading ? " field-button-disabled" : ""}`}
                 type="submit"
                 key="signup-button"
               >
@@ -133,6 +127,7 @@ class Signup extends React.Component {
 const mapStateToProps = (state) => ({
   loggedin: state.auth.loggedin,
   loading: state.auth.loading,
+  signedup: state.auth.signedup
 });
 
 export default connect(mapStateToProps, {signup})(Signup);

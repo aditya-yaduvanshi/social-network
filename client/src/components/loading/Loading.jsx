@@ -9,7 +9,7 @@ class Loading extends React.Component {
         <div className="loading">
           <div className="loading-wrap text-center">
             <img src={loading} alt="loading" />
-            <h1>LOADING</h1>
+            <p>{this.props.msg ? this.props.msg : "LOADING"}</p>
           </div>
         </div>
       </>

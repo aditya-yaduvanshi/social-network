@@ -1,4 +1,5 @@
 import React from "react";
+import Alert from "../../components/alert/Alert";
 import "./Home.scss";
 
 class Home extends React.Component {
@@ -6,6 +7,7 @@ class Home extends React.Component {
     return (
       <>
         <h1 className="text-center">Welcome To Socio!</h1>
+        <Alert/>
       </>
     );
   }

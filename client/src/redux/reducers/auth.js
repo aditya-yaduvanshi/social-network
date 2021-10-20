@@ -3,6 +3,10 @@ const initialState = {
   loggedin: localStorage.getItem("token") ? true : false,
   loading: false,
   resetted: false,
+  verified: false,
+  linkSent: false,
+  signedup: false,
+  verifyError: false,
   user: localStorage.getItem("user") ? localStorage.getItem("user") : '',
 };
 
@@ -22,7 +26,8 @@ const auth = (state = initialState, action) => {
       return {
         ...state,
         loggedin: false,
-        loading: true,
+        loading: false,
+        signedup: true
       };
     case "SIGNUP_FAIL":
     case "LOGIN_FAIL":
@@ -52,6 +57,36 @@ const auth = (state = initialState, action) => {
       return {
         ...state,
         loading: true
+      }
+    case "VERIFY_SUCCESS":
+      return {
+        ...state,
+        loading: false,
+        verified: true
+      }
+    case "VERIFY_FAIL":
+      return {
+        ...state,
+        loading: false,
+        verified: false
+      }
+    case "EMAIL_LINK_SUCCESS":
+      return {
+        ...state,
+        laoding: false,
+        linkSent: true
+      }
+    case "EMAIL_LINK_FAIL":
+      return {
+        ...state,
+        loading: false,
+        linkSent: false
+      }
+    case "VERIFY_ERROR":
+      return {
+        ...state,
+        loading: false,
+        verifyError: true
       }
     default:
       return state;

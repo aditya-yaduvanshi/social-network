@@ -44,7 +44,7 @@ class Header extends React.Component {
               <InputField
                 fieldClass="m-0"
                 labelClass="field-label-search"
-                inputClass="field-input-search"
+                inputClass="field-input-search rounded"
                 type="text"
                 name="query"
                 placeholder="Search people, posts, keywords and more."
@@ -89,7 +89,7 @@ class Header extends React.Component {
 
 const mapStateToProps = (state) => ({
   loggedin: state.auth.loggedin,
-  user: state.auth.user
+  user: state.auth.user,
 });
 
 export default connect(mapStateToProps, {logout})(Header);

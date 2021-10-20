@@ -1,8 +1,8 @@
 require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const mongoose = require("mongoose");
-const accounts = require("./accounts");
+const express = require("express"),
+  cors = require("cors"),
+  mongoose = require("mongoose"),
+  accounts = require("./accounts");
 
 process.on("unhandledRejection", (err) => console.log(err));
 

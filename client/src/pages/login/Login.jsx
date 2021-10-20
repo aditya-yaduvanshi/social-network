@@ -9,13 +9,14 @@ import Loading from "../../components/loading/Loading";
 // components
 import InputField from "../../components/input-field/InputField";
 import Button from "../../components/button/Button";
+import Verification from "../verification/Verification";
 //import OAuth from "../../components/oauth/OAuth";
 
 class Login extends React.Component {
   constructor() {
     super();
     this.state = {
-      username: "",
+      email: "",
       password: "",
     };
   }
@@ -23,7 +24,7 @@ class Login extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     this.props.login({
-      username: this.state.username,
+      email: this.state.email,
       password: this.state.password,
     });
   }
@@ -43,6 +44,8 @@ class Login extends React.Component {
 
     if (this.props.loading) return <Loading />;
 
+    if(this.props.verifyError) return <Verification/>
+
     return (
       <>
         <div className="login">
@@ -51,11 +54,12 @@ class Login extends React.Component {
             <form onSubmit={this.handleSubmit.bind(this)} className="form">
               <InputField
                 className="form-control"
-                type="text"
-                name="username"
-                autoComplete="current-username"
-                placeholder="Username, Phone or Email."
+                type="email"
+                name="email"
+                autoComplete="current-email"
+                placeholder="Current Email Address."
                 onChange={this.handleChange.bind(this)}
+                value={this.state.email}
                 required
                 key="login-username"
               />
@@ -67,6 +71,7 @@ class Login extends React.Component {
                 autoComplete="current-password"
                 placeholder="Current Login Password."
                 onChange={this.handleChange.bind(this)}
+                value={this.state.password}
                 required
                 key="login-password"
               />
@@ -98,6 +103,7 @@ class Login extends React.Component {
 const mapStateToProps = (state) => ({
   loggedin: state.auth.loggedin,
   loading: state.auth.loading,
+  verifyError: state.auth.verifyError
 });
 
 export default connect(mapStateToProps, {login})(Login);

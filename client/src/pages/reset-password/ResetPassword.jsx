@@ -5,45 +5,59 @@ import "./ResetPassword.scss";
 import InputField from "../../components/input-field/InputField";
 import Button from "../../components/button/Button";
 import Loader from "../../components/loader/Loader";
+import Loading from "../../components/loading/Loading";
 import {verifyOtp, sendOtp} from "../../redux/actions/otp";
 import {reset} from "../../redux/actions/auth";
 
 class ResetPassword extends React.Component {
-  constructor({
-    resetted, 
-    otpVerified, 
-    otpSent, 
-    verifyOtp, 
-    sendOtp
-  }){
-      super({
-        resetted, 
-        otpVerified, 
-        otpSent, 
-        verifyOtp, 
-        sendOtp
-      })
-      this.state = {
-
-      }
-    }
+  constructor({resetted, otpVerified, otpSent, verifyOtp, sendOtp}) {
+    super({
+      resetted,
+      otpVerified,
+      otpSent,
+      verifyOtp,
+      sendOtp,
+    });
+    this.state = {
+      otp: null,
+      email: null,
+      password: null,
+      password2: null,
+    };
+  }
   handleChange(event) {
-    console.log(event.target.value);
+    this.setState({
+      [event.target.name]: event.target.value
+    })
+    if(this.state.password !== this.state.password2){
+      
+    }
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    if(this.props.otpSent)
-      this.props.verifyOtp({})
-    if(this.props.otpVerified)
-      this.props.reset({})
+    if (this.props.otpSent) {
+      this.props.verifyOtp({
+        otp: this.state.otp
+      });
+    }
+    if (this.props.otpVerified) {
+      this.props.reset({
+        password: this.state.password,
+        password2: this.state.password2
+      });
+    }
     else {
-      this.props.sendOtp({})
+      this.props.sendOtp({
+        email: this.state.email
+      });
     }
   }
 
   render() {
-    if(this.props.resetted) return <Redirect to="/login"/>;
+    if (this.props.resetted) return <Redirect to="/login" />;
+
+    if(this.props.loadingOtp || this.props.loadingAuth) return <Loading/>;
 
     return (
       <>
@@ -111,7 +125,14 @@ class ResetPassword extends React.Component {
                     )}
                   </Button>
                   <div>
-                    Didn't recieved ? <button className="nav-link" type="reset" onClick={this.handleClick}>Resend</button> 
+                    Didn't recieved ?
+                    <button
+                      className="nav-link"
+                      type="reset"
+                      onClick={this.handleClick}
+                    >
+                      Resend
+                    </button>
                   </div>
                 </>
               )}

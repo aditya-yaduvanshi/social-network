@@ -34,8 +34,31 @@ const isPhone = async (phone) => {
   return num.test(String(phone).toLowerCase());
 };
 
+const sendOTPByMail = async (to, otp) => {
+  const testAccount = await nodemailer.createTestAccount(),
+    transporter = nodemailer.createTransport({
+      host: "smtp.ethereal.email",
+      port: 587,
+      secure: false,
+      auth: {
+        user: testAccount.user,
+        pass: testAccount.pass,
+      },
+    });
+  let info = await transporter.sendMail({
+    from: process.env.AUTH_EMAIL,
+    to: to,
+    subject: "Socio: Reset Password OTP",
+    text: `Please confirm your account by entering OTP: ${otp}`,
+    html: `<p>Please confirm your account by entering OTP: ${otp}</p>`,
+  });
+  console.log("preview : ", nodemailer.getTestMessageUrl(info));
+  return info;
+}
+
 module.exports = {
   isEmail,
   isPhone,
   sendMail,
+  sendOTPByMail
 };

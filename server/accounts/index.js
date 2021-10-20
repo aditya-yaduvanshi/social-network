@@ -1,6 +1,6 @@
 const router = require("express").Router();
-const {AccountSchema, TempUser} = require("./models");
-const {isEmail, sendMail} = require("./utils");
+const {AccountSchema, TempUser, OTPSchema} = require("./models");
+const {isEmail, sendMail, sendOTPByMail} = require("./utils");
 const OTP = require("otp-generator");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
@@ -26,7 +26,7 @@ router.get("/auth", async (req, res, next) => {
     if (!user.active || !user.verified) {
       return res.status(200).json({
         status: 403,
-        msg: "Verification required!"
+        msg: "Verification required!",
       });
     }
 
@@ -35,7 +35,6 @@ router.get("/auth", async (req, res, next) => {
       refresh: "sa12t7vbhbdvimskdnhudg6we",
     });
   } catch (err) {
-    console.log(err);
     return res.sendStatus(502);
   }
 });
@@ -68,27 +67,67 @@ router.post("/auth", async (req, res, next) => {
       }
     } else return res.sendStatus(400);
   } catch (err) {
-    console.log(err);
     return res.sendStatus(400);
   }
 });
 
 // reset password
-router.get("/reset-password", async (req, res, next) => {
+router.get("/otp", async (req, res, next) => {
   let user = await AccountSchema.findOne({email: req.query.email}),
-    resetOTP = OTP.generate(8);
+    resetOTP = OTP.generate(8, {alphabets: false, specialChars: false, upperCase: false, digits: true});
   if (!user) return res.sendStatus(404);
-  sendMail(user.email, resetOTP);
+  let genOTP = await OTPSchema({
+    email: user.email,
+    otp: resetOTP
+  }).save();
+  if(!genOTP) return res.sendStatus(502)
+
+  sendOTPByMail(user.email, resetOTP)
+  .then(info => {
+    return res.sendStatus(200);
+  })
+  .catch(err => {
+    return res.sendStatus(502)
+  })
 });
+
+router.post("/otp", async (req, res, next) => {
+  let data = req.body,
+  validOTP = await OTPSchema.findOne({email: data.email, otp: data.otp})
+  if(!(await validOTP)) {
+    return res.sendStatus(404);
+  }
+
+  let accessTime = new Date().getTime()
+  if((accessTime - validOTP.createdAt.getTime()) > 5000*60){
+    return res.sendStatus(400)
+  }
+  
+  if(Number(validOTP.otp) !== Number(data.otp)) {
+    return res.sendStatus(400)
+  }
+  
+  await validOTP.delete()
+
+  return res.sendStatus(200)
+})
+
 router.post("/reset-password", async (req, res, next) => {
   let data = req.body,
     user;
   try {
-    if (await isEmail(data.email)) {
-      //
-    }
+    if (!(await isEmail(data.email)) || 
+      data.password.length < 6 ||
+      data.password !== data.password2
+    ) return res.sendStatus(400)
+
+    let hash = await bcrypt.hash(data.password, saltRounds)
+    user = await AccountSchema.findOneAndUpdate({email: data.email},{password: hash})
+    if(!(await user)) return res.sendStatus(404);
+
+    return res.sendStatus(204);
   } catch (err) {
-    console.log(err);
+    return res.sendStatus(502);
   }
 });
 
@@ -102,26 +141,20 @@ router.put("/verify-email", async (req, res, next) => {
       urlId: data.urlId,
     });
     if (!user) return res.sendStatus(404);
-    if (new Date().getTime() - user.createdAt.getTime() > 86400000){
+    if (new Date().getTime() - user.createdAt.getTime() > 86400000) {
       return res.sendStatus(400);
     }
 
     if (await user.delete()) {
       let verifiedUser = await AccountSchema.findOneAndUpdate(
-        {
-          email: data.email,
-        },
-        {
-          verified: true,
-          active: true,
-        }
+        {email: data.email},
+        {verified: true, active: true}
       );
       if (!verifiedUser) return res.sendStatus(502);
 
       return res.sendStatus(200);
     }
   } catch (err) {
-    console.log(err);
     return res.sendStatus(502);
   }
 });
@@ -134,7 +167,6 @@ router.get("/verify-email", async (req, res, next) => {
       info = await sendMail(email, resetOTP);
     if (tempUser && info) return res.sendStatus(200);
   } catch (err) {
-    console.log(err);
     return res.sendStatus(404);
   }
 });

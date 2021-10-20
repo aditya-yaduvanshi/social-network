@@ -18,7 +18,7 @@ const auth = (state = initialState, action) => {
       return {
         ...state,
         loggedin: true,
-        loading: true,
+        loading: false,
         token: action.payload.access,
         user: action.payload.user
       };

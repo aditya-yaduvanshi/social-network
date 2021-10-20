@@ -39,8 +39,24 @@ const TempUser = mongoose.Schema({
   },
 });
 
+const OTPSchema = mongoose.Schema({
+  email: {
+    type: String,
+    required: true
+  },
+  otp: {
+    type: Number,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: new Date(),
+  }
+});
+
 
 module.exports = {
   AccountSchema: mongoose.model("Accounts", AccountSchema),
-  TempUser: mongoose.model("TempUser", TempUser)
+  TempUser: mongoose.model("TempUser", TempUser),
+  OTPSchema: mongoose.model("OTPValidation", OTPSchema)
 };

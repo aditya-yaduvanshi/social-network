@@ -29,7 +29,7 @@ class Verification extends React.Component {
   }
   componentDidMount(){
     let query = new URLSearchParams(this.props.location.search)
-    if(!this.props.verified){
+    if(!this.props.verified && query.get("email") && query.get("urlId")){
       this.props.verifyEmail({
         email: query.get("email"),
         urlId: query.get("urlId")

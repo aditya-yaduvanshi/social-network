@@ -3,12 +3,12 @@ import axios from "axios";
 
 const login = (user) => {
   return async (dispatch) => {
-    dispatch({type: "AUTH_LOADING"})
+    dispatch({type: "AUTH_LOADING"});
     return axios
       .get(`accounts/auth?email=${user.email}&password=${user.password}`)
       .then((res) => {
-        if(res.data.status === 403){
-          return dispatch({type: "VERIFY_ERROR"})
+        if (res.data.status === 403) {
+          return dispatch({type: "VERIFY_ERROR"});
         }
         dispatch({
           type: "LOGIN_SUCCESS",
@@ -25,16 +25,16 @@ const login = (user) => {
 
 const signup = (user) => {
   return async (dispatch) => {
-    dispatch({type: "AUTH_LOADING"})
+    dispatch({type: "AUTH_LOADING"});
     return axios
       .post("accounts/auth", user)
       .then((res) => {
         dispatch({
-          type: "SIGNUP_SUCCESS"
+          type: "SIGNUP_SUCCESS",
         });
         dispatch({
-          type: "VERIFYING"
-        })
+          type: "VERIFYING",
+        });
       })
       .catch((err) => {
         dispatch({
@@ -46,7 +46,7 @@ const signup = (user) => {
 
 const oauth = (user) => {
   return async (dispatch) => {
-    dispatch({type: "AUTH_LOADING"})
+    dispatch({type: "AUTH_LOADING"});
     return axios
       .post("accounts/oauth", JSON.stringify(user))
       .then((res) => {
@@ -65,57 +65,51 @@ const oauth = (user) => {
 
 const reset = (user) => {
   return async (dispatch) => {
-    dispatch({type: "AUTH_LOADING"})
-    let name = user.name,
-    email = user.email,
-    phone = user.phone,
-    password = user.password,
-    current_email = localStorage.getItem("user");
+    dispatch({type: "AUTH_LOADING"});
     return axios
-      .put("accounts/auth", JSON.stringify({name, current_email, email, phone, password}))
-      .then(res => {
+      .post("accounts/reset-password", JSON.stringify(user))
+      .then((res) => {
         dispatch({
           type: "RESET_SUCCESS",
-          payload: res.data
-        })
+          payload: res.data,
+        });
       })
-      .catch(err => {
-        dispatch({type: "RESET_FAIL"})
-      })
-  }
-}
+      .catch((err) => {
+        dispatch({type: "RESET_FAIL"});
+      });
+  };
+};
 
 const verifyEmail = (cred) => {
   return async (dispatch) => {
-    dispatch({type: "AUTH_LOADING"})
+    dispatch({type: "AUTH_LOADING"});
     return axios
       .put("accounts/verify-email", JSON.stringify(cred))
-      .then(res => {
+      .then((res) => {
         dispatch({
           type: "VERIFY_SUCCESS",
-          payload: res.data
-        })
+          payload: res.data,
+        });
       })
-      .catch(err => {
-        dispatch({type: "VERIFY_FAIL"})
-      })
-  }
-}
+      .catch((err) => {
+        dispatch({type: "VERIFY_FAIL"});
+      });
+  };
+};
 
 const getEmailVerifyLink = (cred) => {
   return async (dispatch) => {
-    dispatch({type: "AUTH_LOADING"})
+    dispatch({type: "AUTH_LOADING"});
     return axios
       .get(`/accounts/verify-email?email=${cred.email}`)
-      .then(res => {
-        dispatch({type: "EMAIL_LINK_SUCCESS"})
+      .then((res) => {
+        dispatch({type: "EMAIL_LINK_SUCCESS"});
       })
-      .catch(err => {
-        console.log(err)
-        dispatch({type: "EMAIL_LINK_FAIL"})
-      })
-  }
-}
+      .catch((err) => {
+        dispatch({type: "EMAIL_LINK_FAIL"});
+      });
+  };
+};
 
 const logout = () => ({type: "LOGOUT"});
 

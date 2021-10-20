@@ -29,29 +29,35 @@ class ResetPassword extends React.Component {
     this.setState({
       [event.target.name]: event.target.value
     })
-    if(this.state.password !== this.state.password2){
-      
-    }
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    if (this.props.otpSent) {
+    if (this.props.otpSent && !this.props.otpVerified) {
       this.props.verifyOtp({
+        email: this.state.email,
         otp: this.state.otp
       });
     }
     if (this.props.otpVerified) {
       this.props.reset({
+        email: this.state.email,
         password: this.state.password,
         password2: this.state.password2
       });
     }
-    else {
+    else if(!this.props.otpSent && !this.props.otpVerified) {
       this.props.sendOtp({
         email: this.state.email
       });
     }
+  }
+
+  handleClick(event){
+    event.preventDefault()
+    this.props.sendOtp({
+      email: this.state.email
+    });
   }
 
   render() {
@@ -127,9 +133,9 @@ class ResetPassword extends React.Component {
                   <div>
                     Didn't recieved ?
                     <button
-                      className="nav-link"
+                      className="nav-link btn btn-primary w-100 text-white"
                       type="reset"
-                      onClick={this.handleClick}
+                      onClick={this.handleClick.bind(this)}
                     >
                       Resend
                     </button>

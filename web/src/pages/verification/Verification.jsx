@@ -14,12 +14,14 @@ class Verification extends React.Component {
   }
   
   componentDidMount(){
-    let query = new URLSearchParams(this.props.location.search)
-    if(!this.props.verified && query.get("email") && query.get("urlId")){
-      this.props.verifyEmail({
-        email: query.get("email"),
-        urlId: query.get("urlId")
-      })
+    if(this.props.location){
+      let query = new URLSearchParams(this.props.location.search)
+      if(!this.props.verified && query.get("email") && query.get("urlId")){
+        this.props.verifyEmail({
+          email: query.get("email"),
+          urlId: query.get("urlId")
+        })
+      }
     }
   }
 
@@ -57,6 +59,7 @@ class Verification extends React.Component {
                     value={this.state.email}
                     required
                   />
+                  <p>Didn't recieved a link?</p>
                   <Button 
                     type="submit"
                     className="btn btn-primary w-100"

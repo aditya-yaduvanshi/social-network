@@ -13,15 +13,12 @@ import {Link, Redirect} from "react-router-dom";
 import Loading from "../../components/loading/Loading";
 
 class Signup extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      name: "",
-      email: "",
-      password: "",
-      password2: "",
-    };
-  }
+  state = {
+    name: "",
+    email: "",
+    password: "",
+    password2: "",
+  };
 
   handleSubmit(event) {
     event.preventDefault();

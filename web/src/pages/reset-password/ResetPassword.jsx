@@ -10,21 +10,14 @@ import {verifyOtp, sendOtp} from "../../redux/actions/otp";
 import {reset} from "../../redux/actions/auth";
 
 class ResetPassword extends React.Component {
-  constructor({resetted, otpVerified, otpSent, verifyOtp, sendOtp}) {
-    super({
-      resetted,
-      otpVerified,
-      otpSent,
-      verifyOtp,
-      sendOtp,
-    });
-    this.state = {
-      otp: null,
-      email: null,
-      password: null,
-      password2: null,
-    };
-  }
+  
+  state = {
+    otp: null,
+    email: null,
+    password: null,
+    password2: null,
+  };
+
   handleChange(event) {
     this.setState({
       [event.target.name]: event.target.value

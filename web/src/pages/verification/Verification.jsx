@@ -8,25 +8,11 @@ import "./Verification.scss"
 import InputField from "../../components/input-field/InputField"
 
 class Verification extends React.Component {
-  constructor({
-    verifyEmail, 
-    getEmailVerifyLink,
-    loading,
-    linkSent,
-    verified
-  }){
-    super({
-      verifyEmail, 
-      getEmailVerifyLink,
-      loading,
-      linkSent,
-      verified
-    });
-    this.state = {
-      email: "",
-      urlId: ""
-    }
+  state = {
+    email: "",
+    urlId: ""
   }
+  
   componentDidMount(){
     let query = new URLSearchParams(this.props.location.search)
     if(!this.props.verified && query.get("email") && query.get("urlId")){

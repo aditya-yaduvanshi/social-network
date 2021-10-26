@@ -13,13 +13,10 @@ import Verification from "../verification/Verification";
 //import OAuth from "../../components/oauth/OAuth";
 
 class Login extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      email: "",
-      password: "",
-    };
-  }
+  state = {
+    email: "",
+    password: "",
+  };
 
   handleSubmit(event) {
     event.preventDefault();

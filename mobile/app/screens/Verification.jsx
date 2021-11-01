@@ -1,19 +1,19 @@
 import React from "react";
 import {
-  View,
-  Text,
   TextInput,
+  Text,
+  View,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import {login} from "../redux/actions/auth";
 import Loader from "../components/Loader";
+import {sendOtp, verifyOtp} from "../redux/actions/otp";
 import {connect} from "react-redux";
 
-class Login extends React.Component {
+class Verification extends React.Component {
   state = {
     email: "",
-    password: "",
+    otp: null,
   };
 
   setEmail(text) {
@@ -21,51 +21,74 @@ class Login extends React.Component {
       email: text,
     });
   }
-  setPassword(text) {
+  setOTP(text) {
     this.setState({
-      password: text,
+      otp: text,
     });
   }
-  submitLogin(event) {
+  sendOTP(event) {
     event.preventDefault();
-    this.props.login({
+    this.props.sendOtp({
       email: this.state.email,
-      password: this.state.password,
+      type: "email-verification",
+    });
+  }
+  verifyOTP(event) {
+    event.preventDefault();
+    this.props.verifyOtp({
+      otp: this.state.otp,
+      email: this.state.email,
+      type: "email-verification",
     });
   }
 
   render() {
-    if (this.props.loading) {
+    if (this.props.loadingOTP) {
       return <Loader />;
     }
-    if (this.props.loggedin) return this.props.navigation.navigate("home");
-    else if (!this.props.verified && this.props.signedup)
-      return this.props.navigation.navigate("verification");
+    if (this.props.otpVerified) return this.props.navigation.navigate("login");
     else
       return (
         <>
           <View style={styles.container}>
             <Text style={styles.app}>SOCIO</Text>
             <View style={styles.view}>
-              <Text style={styles.title}>Account Login</Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder="Email or Username."
-                onChangeText={this.setEmail.bind(this)}
-                value={this.state.email}
-              />
-              <TextInput
-                style={styles.textInput}
-                placeholder="Password."
-                onChangeText={this.setPassword.bind(this)}
-                value={this.state.password}
-              />
-              <TouchableOpacity
-                style={styles.button}
-                onPress={this.submitLogin.bind(this)}
-              >
-                <Text style={styles.buttonText}>LOGIN</Text>
-              </TouchableOpacity>
+              <Text style={styles.title}>Email Verification</Text>
+              {!this.props.otpSent && !this.props.otpVerified && (
+                <>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder="Email or Username."
+                    onChangeText={this.setEmail.bind(this)}
+                    value={this.state.email}
+                  />
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={this.sendOTP.bind(this)}
+                  >
+                    <Text style={styles.buttonText}>Send OTP</Text>
+                  </TouchableOpacity>
+                </>
+              )}
+              {this.props.otpSent && !this.props.otpVerified && (
+                <>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder="Confirm OTP."
+                    onChangeText={this.setOTP.bind(this)}
+                    value={this.state.otp}
+                  />
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={this.verifyOTP.bind(this)}
+                  >
+                    <Text style={styles.buttonText}>Verify OTP</Text>
+                  </TouchableOpacity>
+                </>
+              )}
+              {this.props.otpSent &&
+                this.props.otpVerified &&
+                this.props.navigation.navigate("home")}
               <View style={styles.buttonGroup}>
                 <TouchableOpacity
                   style={styles.button2}
@@ -75,11 +98,9 @@ class Login extends React.Component {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.button2}
-                  onPress={() =>
-                    this.props.navigation.navigate("reset-password")
-                  }
+                  onPress={() => this.props.navigation.navigate("login")}
                 >
-                  <Text>Reset Password</Text>
+                  <Text>Account Login</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -157,11 +178,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => ({
-  loggedin: state.auth.loggedin,
-  loading: state.auth.loading,
-  verified: state.auth.verified,
-  signedup: state.auth.signedup,
+const mapStateToprops = (state) => ({
+  otpSent: state.otp.sent,
+  otpVerified: state.otp.verified,
+  loadingOTP: state.otp.loading,
 });
 
-export default connect(mapStateToProps, {login})(Login);
+export default connect(mapStateToprops, {sendOtp, verifyOtp})(Verification);

@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 
 const AccountSchema = mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
   email: {
     type: String,
     required: true,
@@ -22,21 +18,8 @@ const AccountSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
-});
-
-const TempUser = mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-  },
-  urlId: {
-    type: String,
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    default: new Date(),
-  },
+  access: String,
+  refresh: String
 });
 
 const OTPSchema = mongoose.Schema({
@@ -45,7 +28,7 @@ const OTPSchema = mongoose.Schema({
     required: true
   },
   otp: {
-    type: Number,
+    type: String,
     required: true,
   },
   createdAt: {
@@ -57,6 +40,5 @@ const OTPSchema = mongoose.Schema({
 
 module.exports = {
   AccountSchema: mongoose.model("Accounts", AccountSchema),
-  TempUser: mongoose.model("TempUser", TempUser),
   OTPSchema: mongoose.model("OTPValidation", OTPSchema)
 };

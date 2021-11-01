@@ -15,9 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cors());
 
-app.get("/", async (req, res) => {
-  res.send("Express server is ready!");
-});
+// api routes
 app.use("/api/accounts", accounts);
 
 try {

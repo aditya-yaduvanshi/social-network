@@ -1,32 +1,73 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {StatusBar} from "expo-status-bar";
+import React from "react";
+import {StyleSheet, Text, View} from "react-native";
+import {NavigationContainer} from "@react-navigation/native";
+import {createNativeStackNavigator} from "@react-navigation/native-stack";
+import axios from "axios";
 
-//import Config from './app/config';
-import Login from './app/screens/Login';
-import Signup from './app/screens/Signup';
-import Home from './app/screens/Home';
+import Store from "./app/redux/store";
+import {Provider} from "react-redux";
+
+import Home from "./app/screens/Home";
+import Loader from "./app/components/Loader";
+
+const Login = React.lazy(() =>
+  import("./app/screens/Login")
+    .then((Login) => Login)
+    .catch((err) => console.log(err))
+);
+const Signup = React.lazy(() =>
+  import("./app/screens/Signup")
+    .then((Signup) => Signup)
+    .catch((err) => console.log(err))
+);
+const ResetPass = React.lazy(() =>
+  import("./app/screens/ResetPass")
+    .then((ResetPass) => ResetPass)
+    .catch((err) => console.log(err))
+);
+const Verification = React.lazy(() =>
+  import("./app/screens/Verification")
+    .then((Verification) => Verification)
+    .catch((err) => console.log(err))
+);
+
+axios.defaults.baseURL = "http://192.168.177.39:5000/api/";
+axios.defaults.headers = {};
+axios.defaults.headers = {
+  "Content-Type": "application/json",
+};
 
 const Stack = createNativeStackNavigator();
 
 export default class App extends React.Component {
-  render(){
+  render() {
     return (
       <>
-        <NavigationContainer>
-          <View style={styles.container}>
-            <Text>SOCIO APP</Text>
-            <Stack.Navigator initialRouteName="home">
-              <Stack.Screen name="login" component={Login} options={{title: "Home"}}/>
-              <Stack.Screen name="signup" component={Signup}/>
-              <Stack.Screen name="home" component={Home}/>
-            </Stack.Navigator>
-            <Login/>
-            <StatusBar style={{height: '20px', width: '100%', backgroundColor: 'red'}} />
-          </View>
-        </NavigationContainer>
+        <Provider store={Store}>
+          <NavigationContainer>
+            <View style={styles.container}>
+              <React.Suspense fallback={<Loader />}>
+                <Stack.Navigator initialRouteName="home">
+                  <Stack.Screen name="login" component={Login} />
+                  <Stack.Screen name="signup" component={Signup} />
+                  <Stack.Screen
+                    name="reset-password"
+                    component={ResetPass}
+                  />
+                  <Stack.Screen
+                    name="verification"
+                    component={Verification}
+                  />
+                  <Stack.Screen name="home" component={Home} />
+                </Stack.Navigator>
+              </React.Suspense>
+              <StatusBar
+                style={{height: "20px", width: "100%", backgroundColor: "red"}}
+              />
+            </View>
+          </NavigationContainer>
+        </Provider>
       </>
     );
   }
@@ -35,8 +76,7 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    justifyContent: "center",
   },
 });

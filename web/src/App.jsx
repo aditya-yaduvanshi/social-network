@@ -6,6 +6,7 @@ import {Route, Switch} from "react-router-dom";
 import Home from "./pages/home/Home";
 import ProRoute from "./components/ProRoute";
 import Fetch from "./components/fetch/Fetch";
+import Alert from "./components/alert/Alert";
 import "./App.scss";
 import { connect } from "react-redux";
 // authentication pages
@@ -42,7 +43,7 @@ class App extends React.Component {
       <>
         <main className="App container">
           {(this.props.loadingAuth || this.props.loadingOTP ) && <Fetch/>}
-          <React.Suspense fallback={Fetch}>
+          <React.Suspense fallback={<Fetch/>}>
             <Switch>
               <ProRoute exact path="/" component={Home} />
               <Route path="/login" component={Login} />
@@ -52,6 +53,7 @@ class App extends React.Component {
               <Route component={NotFound} />
             </Switch>
           </React.Suspense>
+          <Alert/>
         </main>
       </>
     );

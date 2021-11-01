@@ -1,25 +1,23 @@
-import React from "react"
-import {connect} from "react-redux"
-import setAlert from "../../redux/actions/alerts"
-import "./Alert.scss"
+import React from "react";
+import {connect} from "react-redux";
+import "./Alert.scss";
 
-class Alert extends React.Component {
-  render(){
+const Alert = ({alerts}) =>
+  alerts != null &&
+  alerts.length > 0 &&
+  alerts.map((alert) => {
     return (
       <>
-        <div className={`alert alert-${this.props.active ? "active" : "none"}${this.props.success ? " alert-success" : " alert-error"}`}>
-          <p className="alert-message">{this.props.message}</p>
+        <div key={alert.id} className={`alert alert-${alert.type}`}>
+          <p className="alert-message">{alert.msg}</p>
           <div className="alert-indicator"></div>
         </div>
       </>
-    )
-  }
-}
+    );
+  });
 
 const mapStateToProps = (state) => ({
-  active: state.alert.active,
-  success: state.alert.success,
-  message: state.alert.message
-})
+  alerts: state.alert,
+});
 
-export default connect(mapStateToProps, {setAlert})(Alert)
+export default connect(mapStateToProps)(Alert);

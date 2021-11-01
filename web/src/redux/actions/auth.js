@@ -1,5 +1,5 @@
 import axios from "axios";
-//import setAlert from "./alerts"
+import setAlert from "./alerts";
 
 const login = (user) => {
   return async (dispatch) => {
@@ -7,18 +7,25 @@ const login = (user) => {
     return axios
       .get(`accounts/auth?email=${user.email}&password=${user.password}`)
       .then((res) => {
-        if (res.data.status === 403) {
-          return dispatch({type: "VERIFY_ERROR"});
+        if (res.status === 400) {
+          if (res.data.status === 402) {
+            dispatch({type: "VERIFY_ERROR"});
+          }
+          dispatch({
+            type: "LOGIN_FAIL",
+          });
+          dispatch(setAlert(res.data.msg, "error"));
+        } else if (res.status === 200) {
+          dispatch({
+            type: "LOGIN_SUCCESS",
+            payload: {...res.data, user: user.email},
+          });
+          dispatch(setAlert("Login Success!", "success"));
         }
-        dispatch({
-          type: "LOGIN_SUCCESS",
-          payload: {...res.data, user: user.email},
-        });
       })
       .catch((err) => {
-        dispatch({
-          type: "LOGIN_FAIL",
-        });
+        dispatch({type: "LOGIN_FAIL"});
+        dispatch(setAlert("Login Failed!", "error"));
       });
   };
 };
@@ -29,17 +36,18 @@ const signup = (user) => {
     return axios
       .post("accounts/auth", user)
       .then((res) => {
-        dispatch({
-          type: "SIGNUP_SUCCESS",
-        });
-        dispatch({
-          type: "VERIFYING",
-        });
+        if (res.status === 400) {
+          dispatch({type: "SIGNUP_FAIL"});
+          dispatch(setAlert(res.data.msg, "error"));
+        } else if (res.status === 201) {
+          dispatch({type: "SIGNUP_SUCCESS"});
+          dispatch({type: "OTP_SENT_SUCCESS"});
+          dispatch(setAlert("Signup success! Please verify account.", "success"));
+        }
       })
       .catch((err) => {
-        dispatch({
-          type: "SIGNUP_FAIL",
-        });
+        dispatch({type: "SIGNUP_FAIL"});
+        dispatch(setAlert("Signup failed!", "error"));
       });
   };
 };
@@ -48,7 +56,7 @@ const oauth = (user) => {
   return async (dispatch) => {
     dispatch({type: "AUTH_LOADING"});
     return axios
-      .post("accounts/oauth", JSON.stringify(user))
+      .post("accounts/oauth", user)
       .then((res) => {
         dispatch({
           type: "LOGIN_SUCCESS",
@@ -67,50 +75,29 @@ const reset = (user) => {
   return async (dispatch) => {
     dispatch({type: "AUTH_LOADING"});
     return axios
-      .post("accounts/reset-password", JSON.stringify(user))
+      .put("accounts/auth", user)
       .then((res) => {
-        dispatch({
-          type: "RESET_SUCCESS",
-          payload: res.data,
-        });
+        if (res.status === 400) {
+          dispatch({type: "RESET_FAIL"});
+          setAlert(res.data.msg, "error");
+        } else if (res.status === 204) {
+          dispatch({type: "RESET_SUCCESS"});
+          dispatch(setAlert("Password reset success!", "success"));
+        }
       })
       .catch((err) => {
         dispatch({type: "RESET_FAIL"});
+        dispatch(setAlert("Password reset failed!", "error"));
       });
   };
 };
 
-const verifyEmail = (cred) => {
+const logout = () => {
   return async (dispatch) => {
-    dispatch({type: "AUTH_LOADING"});
-    return axios
-      .put("accounts/verify-email", JSON.stringify(cred))
-      .then((res) => {
-        dispatch({
-          type: "VERIFY_SUCCESS",
-          payload: res.data,
-        });
-      })
-      .catch((err) => {
-        dispatch({type: "VERIFY_FAIL"});
-      });
+    dispatch({type: "LOGOUT"});
+    dispatch({type: "OTP_CLEAR"});
+    dispatch(setAlert("Logout success!", "success"));
   };
 };
 
-const getEmailVerifyLink = (cred) => {
-  return async (dispatch) => {
-    dispatch({type: "AUTH_LOADING"});
-    return axios
-      .get(`/accounts/verify-email?email=${cred.email}`)
-      .then((res) => {
-        dispatch({type: "EMAIL_LINK_SUCCESS"});
-      })
-      .catch((err) => {
-        dispatch({type: "EMAIL_LINK_FAIL"});
-      });
-  };
-};
-
-const logout = () => ({type: "LOGOUT"});
-
-export {logout, login, signup, reset, verifyEmail, getEmailVerifyLink, oauth};
+export {logout, login, signup, reset, oauth};

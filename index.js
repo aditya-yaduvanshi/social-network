@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express"),
+  path = require('path'),
   cors = require("cors"),
   mongoose = require("mongoose"),
   accounts = require("./accounts");
@@ -14,6 +15,8 @@ const mongodb_uri = process.env.MONGODB_URI;
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cors());
+app.use("/static", express.static(path.join(__dirname, 'build/static')));
+app.use(express.static(path.join(__dirname, 'web/build')));
 
 // api routes
 app.use("/api/accounts", accounts);

@@ -9,7 +9,7 @@ process.on("unhandledRejection", (err) => console.log(err));
 
 const app = express();
 const port = process.env.PORT || 5000;
-const host = process.env.HOST || "localhost";
+const host = process.env.HOST;
 const mongodb_uri = process.env.MONGODB_URI;
 
 app.use(express.json());

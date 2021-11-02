@@ -16,11 +16,10 @@ import store from "./redux/store";
 import axios from "axios";
 import reportWebVitals from "./reportWebVitals";
 
-axios.defaults.baseURL = "http://localhost:5000/api/";
+axios.defaults.baseURL = "https://infosocio.herokuapp.com/api/";
 axios.defaults.headers = {};
 axios.defaults.headers = {
   "Content-Type": "application/json",
-  Authorization: `Bearer ${localStorage.getItem("token")}`,
 };
 
 ReactDOM.render(

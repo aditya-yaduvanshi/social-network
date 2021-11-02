@@ -91,7 +91,7 @@ router
       return res.status(200).json({status: 400, msg: "Invalid email!"});
     if (data.password.length <= 6 || data.password != data.password2)
       return res.status(200).json({status: 400, msg: "Invalid password!"});
-    if (!(await AccountSchema.find({email: data.email.toLowerCase()})))
+    if ((await AccountSchema.find({email: data.email.toLowerCase()})).length < 0)
       return res.status(200).json({status: 400, msg: "Account not found!"});
 
     try {

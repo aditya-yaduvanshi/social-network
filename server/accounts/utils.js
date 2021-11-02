@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 const saltRounds = 10;
 const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET;
 const jwtAccessSecret = process.env.JWT_ACCESS_SECRET;
+const AUTH_USER = process.env.AUTH_USER;
+const AUTH_PASS = process.env.AUTH_PASS;
 
 
 const isEmail = async (email) => {
@@ -18,7 +20,7 @@ const isPhone = async (phone) => {
 };
 
 const sendOTPByMail = async (to, otp) => {
-  const testAccount = await nodemailer.createTestAccount(),
+  /*const testAccount = await nodemailer.createTestAccount(),
     transporter = nodemailer.createTransport({
       host: "smtp.ethereal.email",
       port: 587,
@@ -27,9 +29,19 @@ const sendOTPByMail = async (to, otp) => {
         user: testAccount.user,
         pass: testAccount.pass,
       },
-    });
+    });*/
+  const transporter = nodemailer.createTransport({
+      service: "hotmail",
+      host: "smtp-mail.outlook.com",
+      secure: false,
+      port: 587,
+      auth: {
+          user: AUTH_USER,
+          pass: AUTH_PASS
+      }
+  });
   let info = await transporter.sendMail({
-    from: process.env.AUTH_EMAIL,
+    from: process.env.AUTH_USER,
     to: to,
     subject: "Socio: Confirm OTP",
     text: `Please confirm your account by entering OTP: ${otp}`,

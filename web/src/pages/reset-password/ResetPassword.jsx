@@ -123,6 +123,16 @@ class ResetPassword extends React.Component {
                   <>
                     <InputField
                       className="form-control"
+                      type="email"
+                      name="email"
+                      autoComplete="current-email"
+                      placeholder="Current Email."
+                      onChange={this.handleChange.bind(this)}
+                      value={this.state.email}
+                      required
+                    />
+                    <InputField
+                      className="form-control"
                       type="number"
                       name="otp"
                       autoComplete="new-otp"

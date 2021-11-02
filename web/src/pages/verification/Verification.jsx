@@ -73,6 +73,16 @@ class Verification extends React.Component {
                 {this.props.otpSent && !this.props.otpVerified && (
                   <>
                     <InputField
+                      type="email"
+                      name="email"
+                      className="form-control"
+                      autoComplete="current-email"
+                      placeholder="Current Email."
+                      onChange={this.handleChange.bind(this)}
+                      value={this.state.email}
+                      required
+                    />
+                    <InputField
                       type="text"
                       name="otp"
                       className="form-control"

@@ -7,11 +7,19 @@ const sendOtp = (cred) => {
     return axios
       .get(`accounts/otp?email=${cred.email}`)
       .then(res => {
-        dispatch({
-          type: "OTP_SENT_SUCCESS",
-          payload: res.data
-        })
-        dispatch(setAlert("OTP sent success.", "success"));
+        if(res.data.status === 200){
+          dispatch({
+            type: "OTP_SENT_SUCCESS",
+            payload: res.data
+          })
+          dispatch(setAlert("OTP sent success.", "success"));
+        } else {
+          dispatch({
+            type: "OTP_SENT_FAIL",
+            payload: res.data
+          })
+          dispatch(setAlert(res.data.msg, "success"));
+        }
       })
       .catch(err => {
         dispatch({type: "OTP_SENT_FAIL"})
@@ -26,13 +34,13 @@ const verifyOtp = (cred) => {
     return axios
       .post("accounts/otp", cred)
       .then(res => {
-        if(res.status === 400){
+        if(res.data.status === 400){
           dispatch({type: "OTP_VERIFY_FAIL"})
-          dispatch(setAlert("OTP expired or incorrect!", "error"));
-        } else if (res.status === 500){
+          dispatch(setAlert(res.data.msg, "error"));
+        } else if (res.data.status === 500){
           dispatch({type: "OTP_VERIFY_FAIL"})
-          dispatch(setAlert("OTP cannot be verified! something went wrong.", "error"));
-        } else {
+          dispatch(setAlert(res.data.msg, "error"));
+        } else if(res.data.status === 200) {
           if(cred.type === "email-verification"){
             dispatch({type: "EMAIL_VERIFY_SUCCESS"});
           }

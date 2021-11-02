@@ -82,7 +82,9 @@ const auth = (state = initialState, action) => {
       return {
         ...state,
         verified: false,
-      }
+        signedup: true,
+        loading: false,
+      };
     default:
       return state;
   }

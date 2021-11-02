@@ -42,7 +42,14 @@ class Signup extends React.Component {
 
     if (this.props.loggedin) return <Redirect to="/" />;
     else if (this.props.signedup)
-      return <Redirect to="/email-verification" email={this.state.email} />;
+      return (
+        <Redirect
+          to={{
+            pathname: "/email-verification",
+            state: {email: this.state.email},
+          }}
+        />
+      );
     else
       return (
         <>

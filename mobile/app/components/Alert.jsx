@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   view: {
     position: "absolute",
     width: "100%",
-    bottom: 20,
+    bottom: 50,
     height: 20,
     justifyContent: "center",
     alignItems: "center",

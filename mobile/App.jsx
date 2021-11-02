@@ -2,13 +2,14 @@ import {StatusBar} from "expo-status-bar";
 import React from "react";
 import {StyleSheet, View} from "react-native";
 import axios from "axios";
-import {Nat, Switch, Route} from "react-router-native";
+//import {NativeRouter, Switch, Route} from "react-router-native";
 import Store from "./app/redux/store";
 import {Provider} from "react-redux";
 
+import Main from "./app/Main";
 import Alert from "./app/components/Alert";
-import ProRoute from "./app/components/ProRoute";
-import Loader from "./app/components/Loader";
+//import ProRoute from "./app/components/ProRoute";
+//import Loader from "./app/components/Loader";
 
 const Home = React.lazy(() =>
   import("./app/screens/Home")
@@ -48,7 +49,7 @@ export default class App extends React.Component {
       <>
         <Provider store={Store}>
           <View style={styles.container}>
-            <NativeRouter>
+            {/*<NativeRouter>
               <React.Suspense fallback={<Loader />}>
                 <Switch>
                   <ProRoute exact path="/" component={Home} />
@@ -59,7 +60,8 @@ export default class App extends React.Component {
                   <Route component={Home} />
                 </Switch>
               </React.Suspense>
-            </NativeRouter>
+            </NativeRouter>*/}
+            <Main />
             <Alert />
             <StatusBar
               style={{height: "20px", width: "100%", backgroundColor: "red"}}

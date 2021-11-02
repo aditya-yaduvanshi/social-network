@@ -7,15 +7,15 @@ const login = (user) => {
     return axios
       .get(`accounts/auth?email=${user.email}&password=${user.password}`)
       .then((res) => {
-        if (res.status === 400) {
-          if (res.data.status === 402) {
-            dispatch({type: "VERIFY_ERROR"});
-          }
+        if (res.data.status === 400) {
           dispatch({
             type: "LOGIN_FAIL",
           });
           dispatch(setAlert(res.data.msg, "error"));
-        } else if (res.status === 200) {
+        } else if (res.data.status === 402) {
+          dispatch({type: "VERIFY_ERROR"});
+          dispatch(setAlert(res.data.msg, "error"));
+        } else if (res.data.status === 200) {
           dispatch({
             type: "LOGIN_SUCCESS",
             payload: {...res.data, user: user.email},
@@ -36,13 +36,17 @@ const signup = (user) => {
     return axios
       .post("accounts/auth", user)
       .then((res) => {
-        if (res.status === 400) {
+        if (res.data.status === 400) {
           dispatch({type: "SIGNUP_FAIL"});
           dispatch(setAlert(res.data.msg, "error"));
-        } else if (res.status === 201) {
+        } else if (res.data.status === 201) { 
           dispatch({type: "SIGNUP_SUCCESS"});
           dispatch({type: "OTP_SENT_SUCCESS"});
           dispatch(setAlert("Signup success! Please verify account.", "success"));
+        } else if(res.data.status === 502){
+          dispatch({type: "SIGNUP_SUCCESS"});
+          dispatch({type: "OTP_SENT_FAIL"});
+          dispatch(setAlert(res.data.msg, "success"));
         }
       })
       .catch((err) => {
@@ -77,12 +81,15 @@ const reset = (user) => {
     return axios
       .put("accounts/auth", user)
       .then((res) => {
-        if (res.status === 400) {
+        if (res.data.status === 400) {
           dispatch({type: "RESET_FAIL"});
-          setAlert(res.data.msg, "error");
-        } else if (res.status === 204) {
+          dispatch(setAlert(res.data.msg, "error"));
+        } else if (res.data.status === 204) {
           dispatch({type: "RESET_SUCCESS"});
           dispatch(setAlert("Password reset success!", "success"));
+        } else if(res.data.status === 500){
+          dispatch({type: "RESET_FAIL"});
+          dispatch(setAlert(res.data.msg, "error"));
         }
       })
       .catch((err) => {

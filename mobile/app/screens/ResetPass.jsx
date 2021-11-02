@@ -5,16 +5,17 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import Loader from "../components/Loader";
 import {sendOtp, verifyOtp} from "../redux/actions/otp";
 import {reset} from "../redux/actions/auth";
 import {connect} from "react-redux";
-import {Link, Redirect} from "react-router-native";
+//import {Link, Redirect} from "react-router-native";
 
 class ResetPass extends React.Component {
   state = {
-    email: "",
+    email: this.props.route.params ? this.props.route.params.email : "",
     otp: null,
     password: "",
     password2: "",
@@ -64,7 +65,6 @@ class ResetPass extends React.Component {
 
   render() {
     if (this.props.loadingAuth || this.props.loadingOTP) return <Loader />;
-    if(this.props.resetted) return <Redirect to="/login" />
 
     return (
       <>
@@ -108,6 +108,12 @@ class ResetPass extends React.Component {
               <>
                 <TextInput
                   style={styles.textInput}
+                  placeholder="Email or Username."
+                  onChangeText={this.setEmail.bind(this)}
+                  value={this.state.email}
+                />
+                <TextInput
+                  style={styles.textInput}
                   placeholder="New Password."
                   onChangeText={this.setPassword.bind(this)}
                   value={this.state.password}
@@ -128,20 +134,32 @@ class ResetPass extends React.Component {
                 </TouchableOpacity>
               </>
             )}
-            <View style={styles.buttonGroup}>
-              <Link
+            {/*<View style={styles.buttonGroup}>
+              <TouchableOpacity
                 style={styles.button2}
-                to="/signup"
+                onPress={() => this.props.navigation.navigate("signup")}
               >
                 <Text>Create Account</Text>
-              </Link>
-              <Link
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={styles.button2}
-                to="/login"
+                onPress={() => this.props.navigation.navigate("Login")}
               >
                 <Text>Account Login</Text>
-              </Link>
-            </View>
+              </TouchableOpacity>
+            </View>*/}
+            {this.props.resetted
+              ? Alert.alert(
+                  "Reset Success",
+                  "Password resetted now you can login with new password.",
+                  [
+                    {
+                      text: "Login to Account",
+                      onPress: () => this.props.navigation.navigate("Login"),
+                    },
+                  ]
+                )
+              : null}
           </View>
         </View>
       </>

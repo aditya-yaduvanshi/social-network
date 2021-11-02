@@ -5,10 +5,11 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import {login} from "../redux/actions/auth";
 import {connect} from "react-redux";
-import { Redirect, Link } from "react-router-native";
+//import { Redirect, Link } from "react-router-native";
 
 import Loader from "../components/Loader";
 
@@ -38,8 +39,6 @@ class Login extends React.Component {
 
   render() {
     if (this.props.loading) return <Loader />;
-    if(this.props.loggedin) return <Redirect to="/" />
-    if(this.props.signedup && !this.props.verified) return <Redirect to="/verify" />
     return (
       <>
         <View style={styles.container}>
@@ -65,20 +64,36 @@ class Login extends React.Component {
             >
               <Text style={styles.buttonText}>LOGIN</Text>
             </TouchableOpacity>
-            <View style={styles.buttonGroup}>
-              <Link
+            {/*<View style={styles.buttonGroup}>
+              <TouchableOpacity
                 style={styles.button2}
-                to="/signup"
+                onPress={() => this.props.navigation.navigate("Signup")}
               >
                 <Text>Create Account</Text>
-              </Link>
-              <Link
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={styles.button2}
-                to="/reset"
+                onPress={() => this.props.navigation.navigate("Reset Password")}
               >
                 <Text>Reset Password</Text>
-              </Link>
-            </View>
+              </TouchableOpacity>
+            </View>*/}
+            {this.props.signedup && !this.props.verified
+              ? Alert.alert(
+                  "Verification Required",
+                  "Please verify your email to login to your account?",
+                  [
+                    {
+                      text: "Verify Email",
+                      onPress: () =>
+                        this.props.navigation.navigate("Verification", {
+                          itemId: "verify-email",
+                          email: this.state.email
+                        }),
+                    },
+                  ]
+                )
+              : null}
           </View>
         </View>
       </>

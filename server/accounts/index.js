@@ -18,41 +18,41 @@ router
     let data = req.query,
       user;
     if (!(await isEmail(data.email)))
-      return res.status(400).json({msg: "Invalid email!"});
+      return res.status(200).json({status: 400, msg: "Invalid email!"});
 
     try {
       user = await AccountSchema.findOne({email: data.email});
     } catch (err) {
-      return res.status(400).json({msg: "Account not found!"});
+      return res.status(200).json({status: 400, msg: "Account not found!"});
     }
 
-    if (!(await user)) return res.status(400).json({msg: "Account not found!"});
+    if (!(await user)) return res.status(200).json({status: 400, msg: "Account not found!"});
 
     let match = await bcrypt.compare(data.password, await user.password);
-    if (!match) return res.status(400).json({msg: "Incorrect password!"});
+    if (!match) return res.status(200).json({status: 400, msg: "Incorrect password!"});
 
     if (!(await user.active) || !(await user.verified))
       return res
-        .status(400)
+        .status(200)
         .json({status: 402, msg: "Account verification required!"});
 
     const access = await createAccess(await user.email),
       refresh = await createRefresh(await user.email);
 
-    return res.status(200).json({access, refresh});
+    return res.status(200).json({status: 200, access, refresh});
   })
   .post(async (req, res, next) => {
     // signup
     let data = req.body,
       user;
     if (!(await isEmail(data.email)))
-      return res.status(400).json({msg: "Invalid email!"});
+      return res.status(200).json({status: 400, msg: "Invalid email!"});
     if (data.password.length <= 6 || data.password != data.password2)
-      return res.status(400).json({msg: "Invalid password!"});
+      return res.status(200).json({status: 400, msg: "Invalid password!"});
     if (
       (await AccountSchema.find({email: data.email.toLowerCase()})).length > 0
     )
-      return res.status(400).json({msg: "Account exists!"});
+      return res.status(200).json({status: 400, msg: "Account exists!"});
 
     try {
       let hash = await bcrypt.hash(data.password, saltRounds);
@@ -62,7 +62,7 @@ router
       }).save();
     } catch (err) {
       console.log(err);
-      return res.status(500).json({msg: "Account not created!"});
+      return res.status(200).json({status: 500, msg: "Account not created!"});
     }
 
     try {
@@ -77,10 +77,10 @@ router
         otp,
       }).save();
       sendOTPByMail(user.email, otp);
-      return res.sendStatus(201);
+      return res.status(200).json({status: 201, msg: "Account created!"});
     } catch (err) {
       console.log(err);
-      return res.status(500).json({msg: "Account created! Otp not sent!"});
+      return res.status(200).json({status: 502, msg: "Account created! Otp not sent!"});
     }
   })
   .put(async (req, res, next) => {
@@ -88,11 +88,11 @@ router
     let data = req.body;
 
     if (!(await isEmail(data.email)))
-      return res.status(400).json({msg: "Invalid email!"});
+      return res.status(200).json({status: 400, msg: "Invalid email!"});
     if (data.password.length <= 6 || data.password != data.password2)
-      return res.status(400).json({msg: "Invalid password!"});
+      return res.status(200).json({status: 400, msg: "Invalid password!"});
     if (!(await AccountSchema.find({email: data.email.toLowerCase()})))
-      return res.status(400).json({msg: "Account not found!"});
+      return res.status(200).json({status: 400, msg: "Account not found!"});
 
     try {
       let hash = await bcrypt.hash(data.password, saltRounds);
@@ -100,9 +100,9 @@ router
         {email: data.email.toLowerCase()},
         {password: hash}
       );
-      return res.sendStatus(204);
+      return res.status(200).json({status: 204, msg: "Password resetted!"});
     } catch (err) {
-      return res.status(500).json({msg: "Password not resetted!"});
+      return res.status(200).json({status: 500, msg: "Password not resetted!"});
     }
   });
 
@@ -110,44 +110,46 @@ router
 router
   .route("/otp")
   .get(async (req, res, next) => {
-    let user = await AccountSchema.findOne({email: req.query.email}),
-      resetOTP = OTP.generate(8, {
+    let user = await AccountSchema.findOne({email: req.query.email});
+    if (!user) return res.status(200).json({status: 404, msg: "Account not found!"});
+    let resetOTP = OTP.generate(8, {
         alphabets: false,
         specialChars: false,
         upperCase: false,
         digits: true,
-      });
-    if (!user) return res.sendStatus(404);
-    let genOTP = await OTPSchema({
+      }),
+    genOTP = await OTPSchema({
       email: user.email,
       otp: resetOTP,
     }).save();
-    if (!genOTP) return res.sendStatus(502);
+    if (!genOTP) return res.status(200).json({status: 500, msg: "OTP not generated!"});
 
     sendOTPByMail(user.email, resetOTP)
       .then((info) => {
-        return res.sendStatus(200);
+        return res.status(200).json({status: 200, msg: "OTP sent!"});
       })
       .catch((err) => {
-        return res.sendStatus(502);
+        return res.status(200).json({status: 502, msg: "Mail with OTP not sent!"});
       });
   })
   .post(async (req, res, next) => {
     let data = req.body,
       validOTP = await OTPSchema.findOne({email: data.email, otp: data.otp});
     if (!(await validOTP)) {
-      return res.status(400).json({msg: "Account not found!"});
+      return res.status(200).json({status: 400, msg: "Account not found!"});
     }
 
     if (data.type === "email-verification") {
       let accessTime = new Date().getTime();
       if (accessTime - validOTP.createdAt.getTime() > 86400000) {
-        return res.status(400).json({msg: "Otp expired!"});
+        validOTP.delete();
+        return res.status(200).json({status: 400, msg: "Otp expired!"});
       }
     } else if (data.type === "reset-password") {
       let accessTime = new Date().getTime();
       if (accessTime - validOTP.createdAt.getTime() > 10000 * 60) {
-        return res.status(400).json({msg: "Otp expired!"});
+        validOTP.delete();
+        return res.status(200).json({status: 400, msg: "Otp expired!"});
       }
     }
     let user = await AccountSchema.findOneAndUpdate(
@@ -157,12 +159,12 @@ router
 
     if (!(await user))
       return res
-        .status(500)
-        .json({msg: "Verification status not updated at the moment!"});
+        .status(200)
+        .json({status: 500, msg: "Verification status not updated at the moment!"});
 
     await validOTP.delete();
 
-    return res.sendStatus(200);
+    return res.status(200).json({status: 200, msg: "OTP verified!"});
   });
 
 module.exports = router;

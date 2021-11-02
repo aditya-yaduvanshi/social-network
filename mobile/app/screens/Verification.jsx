@@ -5,15 +5,16 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import Loader from "../components/Loader";
 import {sendOtp, verifyOtp} from "../redux/actions/otp";
 import {connect} from "react-redux";
-import {Redirect, Link} from "react-router-native";
+//import {Redirect, Link} from "react-router-native";
 
 class Verification extends React.Component {
   state = {
-    email: "",
+    email: this.props.route.params ? this.props.route.params.email : "",
     otp: null,
   };
 
@@ -45,7 +46,6 @@ class Verification extends React.Component {
 
   render() {
     if (this.props.loadingOTP) return <Loader />;
-    if(this.props.authVerified) return <Redirect to="/login" />
     return (
       <>
         <View style={styles.container}>
@@ -72,6 +72,12 @@ class Verification extends React.Component {
               <>
                 <TextInput
                   style={styles.textInput}
+                  placeholder="Email or Username."
+                  onChangeText={this.setEmail.bind(this)}
+                  value={this.state.email}
+                />
+                <TextInput
+                  style={styles.textInput}
                   placeholder="Confirm OTP."
                   onChangeText={this.setOTP.bind(this)}
                   value={this.state.otp}
@@ -84,20 +90,32 @@ class Verification extends React.Component {
                 </TouchableOpacity>
               </>
             )}
-            <View style={styles.buttonGroup}>
-              <Link
+            {/*<View style={styles.buttonGroup}>
+              <TouchableOpacity
                 style={styles.button2}
-                to="/signup"
+                onPress={() => this.props.navigation.navigate("Signup")}
               >
                 <Text>Create Account</Text>
-              </Link>
-              <Link
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={styles.button2}
-                to="/login"
+                onPress={() => this.props.navigation.navigate("Login")}
               >
                 <Text>Account Login</Text>
-              </Link>
-            </View>
+              </TouchableOpacity>
+            </View>*/}
+            {this.props.authVerified && this.props.otpVerified
+              ? Alert.alert(
+                  "Verification Success",
+                  "Your email is verified! Now you can login to your account.",
+                  [
+                    {
+                      text: "Login to Account",
+                      onPress: () => this.props.navigation.navigate("Login"),
+                    },
+                  ]
+                )
+              : null}
           </View>
         </View>
       </>

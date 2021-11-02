@@ -5,11 +5,12 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import {signup} from "../redux/actions/auth";
 import Loader from "../components/Loader";
 import {connect} from "react-redux";
-import {Redirect, Link} from "react-router-native";
+//import {Redirect, Link} from "react-router-native";
 
 class Signup extends React.Component {
   state = {
@@ -43,8 +44,6 @@ class Signup extends React.Component {
 
   render() {
     if (this.props.loading) return <Loader />;
-    if(this.props.signedup) return <Redirect to="/verify" />
-    if(this.props.loggedin) return <Redirect to="/" />
 
     return (
       <>
@@ -85,20 +84,36 @@ class Signup extends React.Component {
             >
               <Text style={styles.buttonText}>Signup</Text>
             </TouchableOpacity>
-            <View style={styles.buttonGroup}>
-              <Link
+            {/*<View style={styles.buttonGroup}>
+              <TouchableOpacity
                 style={styles.button2}
-                to="/login"
+                onPress={() => this.props.navigation.navigate("Login")}
               >
                 <Text>Login to Account</Text>
-              </Link>
-              <Link
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={styles.button2}
-                to="/verify"
+                onPress={() => this.props.navigation.navigate("Verification")}
               >
                 <Text>Verify Account</Text>
-              </Link>
-            </View>
+              </TouchableOpacity>
+            </View>*/}
+            {this.props.signedup && !this.props.verified
+              ? Alert.alert(
+                  "Signup Success",
+                  "Please verify your email to login to your account?",
+                  [
+                    {
+                      text: "Verify Email",
+                      onPress: () =>
+                        this.props.navigation.navigate("Verification", {
+                          itemId: "verify-email",
+                          email: this.state.email
+                        }),
+                    },
+                  ]
+                )
+              : null}
           </View>
         </View>
       </>
@@ -178,6 +193,7 @@ const mapStateToProps = (state) => ({
   loggedin: state.auth.loggedin,
   loading: state.auth.loading,
   signedup: state.auth.signedup,
+  verified: state.auth.verified
 });
 
 export default connect(mapStateToProps, {signup})(Signup);

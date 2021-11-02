@@ -1,8 +1,9 @@
 import React from "react";
-import Loader from "./components/Loader";
 import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {connect} from "react-redux";
+import Loader from "./components/Loader";
 
 const Home = React.lazy(() =>
   import("./screens/Home")
@@ -31,6 +32,7 @@ const Verification = React.lazy(() =>
 );
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 class Main extends React.Component {
   render() {
@@ -38,48 +40,20 @@ class Main extends React.Component {
       <>
         <NavigationContainer>
           <React.Suspense fallback={<Loader />}>
-            <Stack.Navigator initialRouteName="Home">
+            <Tab.Navigator initialRouteName="Login">
               {!this.props.loggedin ? (
                 <>
-                  <Stack.Screen key="login" name="Login" component={Login} />
-                  {!this.props.signedup ? (
-                    <Stack.Screen
-                      key="signup"
-                      name="Signup"
-                      component={Signup}
-                    />
-                  ) : (
-                    <Stack.Screen
-                      key="verify-account"
-                      name="Account Verification"
-                      component={Verification}
-                    />
-                  )}
-                  {!this.props.verified ? (
-                    <Stack.Screen
-                      key="verify"
-                      name="Verification"
-                      component={Verification}
-                    />
-                  ) : (
-                    <Stack.Screen key="login-account" name="Account Login" component={Login} />
-                  )}
-                  {!this.props.resetted ? (
-                    <Stack.Screen
-                      key="reset"
-                      name="Reset Password"
-                      component={ResetPass}
-                    />
-                  ) : (
-                    <Stack.Screen key="resetted-login" name="Login to Account" component={Login} />
-                  )}
+                  <Tab.Screen name="Login" component={Login} />
+                  <Tab.Screen name="Signup" component={Signup} />
+                  <Tab.Screen name="Verification" component={Verification} />
+                  <Tab.Screen name="Reset Password" component={ResetPass} />
                 </>
               ) : (
                 <>
-                  <Stack.Screen key="home" name="Home" component={Home} />
+                  <Tab.Screen name="Home" component={Home} />
                 </>
               )}
-            </Stack.Navigator>
+            </Tab.Navigator>
           </React.Suspense>
         </NavigationContainer>
       </>

@@ -9,19 +9,15 @@ import {
 import {signup} from "../redux/actions/auth";
 import Loader from "../components/Loader";
 import {connect} from "react-redux";
+import {Redirect, Link} from "react-router-native";
 
 class Signup extends React.Component {
   state = {
-    name: "",
     email: "",
     password: "",
     password2: "",
   };
-  setName(text) {
-    this.setState({
-      name: text,
-    });
-  }
+
   setEmail(text) {
     this.setState({
       email: text,
@@ -39,7 +35,6 @@ class Signup extends React.Component {
   }
   submitSignup() {
     this.props.signup({
-      name: this.state.name,
       email: this.state.email,
       password: this.state.password,
       password2: this.state.password2,
@@ -47,70 +42,67 @@ class Signup extends React.Component {
   }
 
   render() {
-    if (this.props.loading) {
-      return <Loader />;
-    }
-    if (this.props.signedup) {
-      return this.props.navigation.navigate("verification");
-    } else if (this.props.loggedin)
-      return this.props.navigation.navigate("home");
-    else
-      return (
-        <>
-          <View style={styles.container}>
-            <Text style={styles.app}>SOCIO</Text>
-            <View style={styles.view}>
-              <Text style={styles.title}>Create Account</Text>
-              <TextInput
-                style={styles.textInput}
-                textContentType="name"
-                placeholder="Full Name."
-                onChangeText={this.setName.bind(this)}
-                value={this.state.name}
-              />
-              <TextInput
-                style={styles.textInput}
-                placeholder="Email or Username."
-                textContentType="emailAddress"
-                onChangeText={this.setEmail.bind(this)}
-                value={this.state.email}
-              />
-              <TextInput
-                style={styles.textInput}
-                placeholder="Password."
-                textContentType="newPassword"
-                onChangeText={this.setPassword.bind(this)}
-                value={this.state.password}
-              />
-              <TextInput
-                style={styles.textInput}
-                placeholder="Confirm Password."
-                textContentType="password"
-                onChangeText={this.setPassword2.bind(this)}
-                value={this.state.password2}
-              />
-              <Text>
-                {this.state.password !== this.state.password2 &&
-                  "Passwords do not matches."}
-              </Text>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={this.submitSignup.bind(this)}
+    if (this.props.loading) return <Loader />;
+    if(this.props.signedup) return <Redirect to="/verify" />
+    if(this.props.loggedin) return <Redirect to="/" />
+
+    return (
+      <>
+        <View style={styles.container}>
+          <Text style={styles.app}>SOCIO</Text>
+          <View style={styles.view}>
+            <Text style={styles.title}>Create Account</Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Email or Username."
+              textContentType="emailAddress"
+              onChangeText={this.setEmail.bind(this)}
+              value={this.state.email}
+            />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Password."
+              textContentType="newPassword"
+              onChangeText={this.setPassword.bind(this)}
+              value={this.state.password}
+              secureTextEntry
+            />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Confirm Password."
+              textContentType="password"
+              onChangeText={this.setPassword2.bind(this)}
+              value={this.state.password2}
+              secureTextEntry
+            />
+            <Text>
+              {this.state.password !== this.state.password2 &&
+                "Passwords do not matches."}
+            </Text>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={this.submitSignup.bind(this)}
+            >
+              <Text style={styles.buttonText}>Signup</Text>
+            </TouchableOpacity>
+            <View style={styles.buttonGroup}>
+              <Link
+                style={styles.button2}
+                to="/login"
               >
-                <Text style={styles.buttonText}>Signup</Text>
-              </TouchableOpacity>
-              <View style={styles.buttonGroup}>
-                <TouchableOpacity
-                  style={styles.button2}
-                  onPress={() => this.props.navigation.navigate("login")}
-                >
-                  <Text>Login to Account</Text>
-                </TouchableOpacity>
-              </View>
+                <Text>Login to Account</Text>
+              </Link>
+              <Link
+                style={styles.button2}
+                to="/verify"
+              >
+                <Text>Verify Account</Text>
+              </Link>
             </View>
           </View>
-        </>
-      );
+        </View>
+      </>
+    );
   }
 }
 

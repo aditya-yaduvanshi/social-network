@@ -9,6 +9,7 @@ import {
 import Loader from "../components/Loader";
 import {sendOtp, verifyOtp} from "../redux/actions/otp";
 import {connect} from "react-redux";
+import {Redirect, Link} from "react-router-native";
 
 class Verification extends React.Component {
   state = {
@@ -43,70 +44,64 @@ class Verification extends React.Component {
   }
 
   render() {
-    if (this.props.loadingOTP) {
-      return <Loader />;
-    }
-    if (this.props.otpVerified) return this.props.navigation.navigate("login");
-    else
-      return (
-        <>
-          <View style={styles.container}>
-            <Text style={styles.app}>SOCIO</Text>
-            <View style={styles.view}>
-              <Text style={styles.title}>Email Verification</Text>
-              {!this.props.otpSent && !this.props.otpVerified && (
-                <>
-                  <TextInput
-                    style={styles.textInput}
-                    placeholder="Email or Username."
-                    onChangeText={this.setEmail.bind(this)}
-                    value={this.state.email}
-                  />
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={this.sendOTP.bind(this)}
-                  >
-                    <Text style={styles.buttonText}>Send OTP</Text>
-                  </TouchableOpacity>
-                </>
-              )}
-              {this.props.otpSent && !this.props.otpVerified && (
-                <>
-                  <TextInput
-                    style={styles.textInput}
-                    placeholder="Confirm OTP."
-                    onChangeText={this.setOTP.bind(this)}
-                    value={this.state.otp}
-                  />
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={this.verifyOTP.bind(this)}
-                  >
-                    <Text style={styles.buttonText}>Verify OTP</Text>
-                  </TouchableOpacity>
-                </>
-              )}
-              {this.props.otpSent &&
-                this.props.otpVerified &&
-                this.props.navigation.navigate("home")}
-              <View style={styles.buttonGroup}>
+    if (this.props.loadingOTP) return <Loader />;
+    if(this.props.authVerified) return <Redirect to="/login" />
+    return (
+      <>
+        <View style={styles.container}>
+          <Text style={styles.app}>SOCIO</Text>
+          <View style={styles.view}>
+            <Text style={styles.title}>Email Verification</Text>
+            {!this.props.otpSent && !this.props.otpVerified && (
+              <>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Email or Username."
+                  onChangeText={this.setEmail.bind(this)}
+                  value={this.state.email}
+                />
                 <TouchableOpacity
-                  style={styles.button2}
-                  onPress={() => this.props.navigation.navigate("signup")}
+                  style={styles.button}
+                  onPress={this.sendOTP.bind(this)}
                 >
-                  <Text>Create Account</Text>
+                  <Text style={styles.buttonText}>Send OTP</Text>
                 </TouchableOpacity>
+              </>
+            )}
+            {this.props.otpSent && !this.props.otpVerified && (
+              <>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Confirm OTP."
+                  onChangeText={this.setOTP.bind(this)}
+                  value={this.state.otp}
+                />
                 <TouchableOpacity
-                  style={styles.button2}
-                  onPress={() => this.props.navigation.navigate("login")}
+                  style={styles.button}
+                  onPress={this.verifyOTP.bind(this)}
                 >
-                  <Text>Account Login</Text>
+                  <Text style={styles.buttonText}>Verify OTP</Text>
                 </TouchableOpacity>
-              </View>
+              </>
+            )}
+            <View style={styles.buttonGroup}>
+              <Link
+                style={styles.button2}
+                to="/signup"
+              >
+                <Text>Create Account</Text>
+              </Link>
+              <Link
+                style={styles.button2}
+                to="/login"
+              >
+                <Text>Account Login</Text>
+              </Link>
             </View>
           </View>
-        </>
-      );
+        </View>
+      </>
+    );
   }
 }
 
@@ -182,6 +177,7 @@ const mapStateToprops = (state) => ({
   otpSent: state.otp.sent,
   otpVerified: state.otp.verified,
   loadingOTP: state.otp.loading,
+  authVerified: state.auth.verified,
 });
 
 export default connect(mapStateToprops, {sendOtp, verifyOtp})(Verification);

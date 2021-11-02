@@ -101,6 +101,7 @@ class Signup extends React.Component {
               </form>
               <div className="auth-links">
                 <Link to="/login"> Login To Account </Link>
+                <Link to="/email-verification"> Verify Account </Link>
               </div>
             </div>
           </div>

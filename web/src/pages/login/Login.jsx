@@ -47,8 +47,7 @@ class Login extends React.Component {
           }
         />
       );
-    else if (!this.props.verified && this.props.signedup){
-      console.log("redirecting to verify")
+    else if (!this.props.verified && this.props.signedup) {
       return (
         <Redirect
           to={{
@@ -57,8 +56,7 @@ class Login extends React.Component {
           }}
         />
       );
-    }
-    else
+    } else
       return (
         <>
           <div className="login">

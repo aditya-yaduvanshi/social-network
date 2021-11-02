@@ -25,7 +25,7 @@ const login = (user) => {
       })
       .catch((err) => {
         dispatch({type: "LOGIN_FAIL"});
-        dispatch(setAlert("Login Failed!", "error"));
+        dispatch(setAlert("Login cannot request!", "error"));
       });
   };
 };
@@ -47,7 +47,7 @@ const signup = (user) => {
       })
       .catch((err) => {
         dispatch({type: "SIGNUP_FAIL"});
-        dispatch(setAlert("Signup failed!", "error"));
+        dispatch(setAlert("Signup cannot request!", "error"));
       });
   };
 };
@@ -87,7 +87,7 @@ const reset = (user) => {
       })
       .catch((err) => {
         dispatch({type: "RESET_FAIL"});
-        dispatch(setAlert("Password reset failed!", "error"));
+        dispatch(setAlert("Password reset cannot request!", "error"));
       });
   };
 };

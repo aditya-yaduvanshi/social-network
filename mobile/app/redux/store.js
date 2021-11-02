@@ -7,7 +7,7 @@ import alert from "./reducers/alerts";
 const allReducers = combineReducers({
   auth,
   otp,
-  alert,
+  alert
 });
 
 const store = createStore(allReducers, applyMiddleware(thunk));

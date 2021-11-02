@@ -7,8 +7,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 import {login} from "../redux/actions/auth";
-import Loader from "../components/Loader";
 import {connect} from "react-redux";
+import { Redirect, Link } from "react-router-native";
+
+import Loader from "../components/Loader";
 
 class Login extends React.Component {
   state = {
@@ -35,57 +37,52 @@ class Login extends React.Component {
   }
 
   render() {
-    if (this.props.loading) {
-      return <Loader />;
-    }
-    if (this.props.loggedin) return this.props.navigation.navigate("home");
-    else if (!this.props.verified && this.props.signedup)
-      return this.props.navigation.navigate("verification");
-    else
-      return (
-        <>
-          <View style={styles.container}>
-            <Text style={styles.app}>SOCIO</Text>
-            <View style={styles.view}>
-              <Text style={styles.title}>Account Login</Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder="Email or Username."
-                onChangeText={this.setEmail.bind(this)}
-                value={this.state.email}
-              />
-              <TextInput
-                style={styles.textInput}
-                placeholder="Password."
-                onChangeText={this.setPassword.bind(this)}
-                value={this.state.password}
-              />
-              <TouchableOpacity
-                style={styles.button}
-                onPress={this.submitLogin.bind(this)}
+    if (this.props.loading) return <Loader />;
+    if(this.props.loggedin) return <Redirect to="/" />
+    if(this.props.signedup && !this.props.verified) return <Redirect to="/verify" />
+    return (
+      <>
+        <View style={styles.container}>
+          <Text style={styles.app}>SOCIO</Text>
+          <View style={styles.view}>
+            <Text style={styles.title}>Account Login</Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Email or Username."
+              onChangeText={this.setEmail.bind(this)}
+              value={this.state.email}
+            />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Password."
+              onChangeText={this.setPassword.bind(this)}
+              value={this.state.password}
+              secureTextEntry
+            />
+            <TouchableOpacity
+              style={styles.button}
+              onPress={this.submitLogin.bind(this)}
+            >
+              <Text style={styles.buttonText}>LOGIN</Text>
+            </TouchableOpacity>
+            <View style={styles.buttonGroup}>
+              <Link
+                style={styles.button2}
+                to="/signup"
               >
-                <Text style={styles.buttonText}>LOGIN</Text>
-              </TouchableOpacity>
-              <View style={styles.buttonGroup}>
-                <TouchableOpacity
-                  style={styles.button2}
-                  onPress={() => this.props.navigation.navigate("signup")}
-                >
-                  <Text>Create Account</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.button2}
-                  onPress={() =>
-                    this.props.navigation.navigate("reset-password")
-                  }
-                >
-                  <Text>Reset Password</Text>
-                </TouchableOpacity>
-              </View>
+                <Text>Create Account</Text>
+              </Link>
+              <Link
+                style={styles.button2}
+                to="/reset"
+              >
+                <Text>Reset Password</Text>
+              </Link>
             </View>
           </View>
-        </>
-      );
+        </View>
+      </>
+    );
   }
 }
 
@@ -101,7 +98,6 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: "center",
     alignItems: "center",
-    minWidth: "100%",
     backgroundColor: "white",
   },
   app: {

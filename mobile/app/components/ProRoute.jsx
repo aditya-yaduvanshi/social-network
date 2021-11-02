@@ -1,8 +1,8 @@
 import React from "react";
-import {Route, Redirect} from "react-router-dom";
 import {connect} from "react-redux";
+import {Redirect, Route} from "react-router-native";
 
-const ProRoute = ({component: Component, loggedin, ...rest}) => {
+const ProRoute = ({loggedin, component: Component, ...rest}) => {
   return (
     <Route
       {...rest}

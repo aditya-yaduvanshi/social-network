@@ -1,16 +1,20 @@
 import {StatusBar} from "expo-status-bar";
 import React from "react";
-import {StyleSheet, Text, View} from "react-native";
-import {NavigationContainer} from "@react-navigation/native";
-import {createNativeStackNavigator} from "@react-navigation/native-stack";
+import {StyleSheet, View} from "react-native";
 import axios from "axios";
-
+import {Nat, Switch, Route} from "react-router-native";
 import Store from "./app/redux/store";
 import {Provider} from "react-redux";
 
-import Home from "./app/screens/Home";
+import Alert from "./app/components/Alert";
+import ProRoute from "./app/components/ProRoute";
 import Loader from "./app/components/Loader";
 
+const Home = React.lazy(() =>
+  import("./app/screens/Home")
+    .then((Home) => Home)
+    .catch((err) => console.log(err))
+);
 const Login = React.lazy(() =>
   import("./app/screens/Login")
     .then((Login) => Login)
@@ -32,41 +36,35 @@ const Verification = React.lazy(() =>
     .catch((err) => console.log(err))
 );
 
-axios.defaults.baseURL = "http://192.168.177.39:5000/api/";
+axios.defaults.baseURL = "http://192.168.151.39:5000/api/";
 axios.defaults.headers = {};
 axios.defaults.headers = {
   "Content-Type": "application/json",
 };
-
-const Stack = createNativeStackNavigator();
 
 export default class App extends React.Component {
   render() {
     return (
       <>
         <Provider store={Store}>
-          <NavigationContainer>
-            <View style={styles.container}>
+          <View style={styles.container}>
+            <NativeRouter>
               <React.Suspense fallback={<Loader />}>
-                <Stack.Navigator initialRouteName="home">
-                  <Stack.Screen name="login" component={Login} />
-                  <Stack.Screen name="signup" component={Signup} />
-                  <Stack.Screen
-                    name="reset-password"
-                    component={ResetPass}
-                  />
-                  <Stack.Screen
-                    name="verification"
-                    component={Verification}
-                  />
-                  <Stack.Screen name="home" component={Home} />
-                </Stack.Navigator>
+                <Switch>
+                  <ProRoute exact path="/" component={Home} />
+                  <Route path="/login" component={Login} />
+                  <Route path="/signup" component={Signup} />
+                  <Route path="/verify" component={Verification} />
+                  <Route path="/reset" component={ResetPass} />
+                  <Route component={Home} />
+                </Switch>
               </React.Suspense>
-              <StatusBar
-                style={{height: "20px", width: "100%", backgroundColor: "red"}}
-              />
-            </View>
-          </NavigationContainer>
+            </NativeRouter>
+            <Alert />
+            <StatusBar
+              style={{height: "20px", width: "100%", backgroundColor: "red"}}
+            />
+          </View>
         </Provider>
       </>
     );

@@ -1,58 +1,40 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import SyncStorage from "sync-storage";
 
 const initialState = {
-  access: AsyncStorage.getItem("access")
-    .then((access) => access)
-    .catch((err) => {})
-    ? AsyncStorage.getItem("access")
-        .then((access) => access)
-        .catch((err) => {})
+  access: SyncStorage.get("access")
+    ? SyncStorage.get("access")
     : null,
-  refresh: AsyncStorage.getItem("refresh")
-    .then((refresh) => refresh)
-    .catch((err) => {})
-    ? AsyncStorage.getItem("refresh")
-        .then((refresh) => refresh)
-        .catch((err) => {})
+  refresh: SyncStorage.get("refresh")
+    ? SyncStorage.get("refresh")
     : null,
-  loggedin: AsyncStorage.getItem("access")
-    .then((access) => access)
-    .catch((err) => {})
+  loggedin: SyncStorage.get("access")
     ? true
     : false,
   loading: false,
   resetted: false,
   signedup: false,
   verified: false,
-  user: AsyncStorage.getItem("user")
-    .then((user) => user)
-    .catch((err) => {})
-    ? AsyncStorage.getItem("user")
-        .then((user) => user)
-        .catch((err) => {})
+  user: SyncStorage.get("user")
+    ? SyncStorage.get("user")
     : "",
 };
 
-const auth = async (state = initialState, action) => {
-  let ok;
+const auth = (state = initialState, action) => {
   switch (action.type) {
     case "LOGIN_SUCCESS":
-      ok = await AsyncStorage.multiSet[
-        (["access", action.payload.access],
-        ["refresh", action.payload.refresh],
-        ["user", action.payload.user])
-      ];
-      if (ok)
-        return {
-          ...state,
-          loggedin: true,
-          loading: false,
-          verified: true,
-          signedup: true,
-          access: action.payload.access,
-          refresh: action.payload.refresh,
-          user: action.payload.user,
-        };
+      SyncStorage.set("access", action.payload.access) 
+      SyncStorage.set("refresh", action.payload.refresh) 
+      SyncStorage.set("user", action.payload.user) 
+      return {
+        ...state,
+        loggedin: true,
+        loading: false,
+        verified: true,
+        signedup: true,
+        access: action.payload.access,
+        refresh: action.payload.refresh,
+        user: action.payload.user,
+      };
     case "SIGNUP_SUCCESS":
       return {
         ...state,
@@ -63,19 +45,20 @@ const auth = async (state = initialState, action) => {
     case "SIGNUP_FAIL":
     case "LOGIN_FAIL":
     case "LOGOUT":
-      ok = await AsyncStorage.multiRemove(["access", "refresh", "user"]);
-      if (ok)
-        return {
-          ...state,
-          access: null,
-          refresh: null,
-          loggedin: false,
-          loading: false,
-          verified: false,
-          user: "",
-          signedup: false,
-          resetted: false,
-        };
+      SyncStorage.remove("access") 
+      SyncStorage.remove("refresh")
+      SyncStorage.remove("user")
+      return {
+        ...state,
+        access: null,
+        refresh: null,
+        loggedin: false,
+        loading: false,
+        verified: false,
+        user: "",
+        signedup: false,
+        resetted: false,
+      };
     case "RESET_SUCCESS":
       return {
         ...state,

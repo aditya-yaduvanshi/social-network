@@ -10,6 +10,7 @@ import Loader from "../components/Loader";
 import {sendOtp, verifyOtp} from "../redux/actions/otp";
 import {reset} from "../redux/actions/auth";
 import {connect} from "react-redux";
+import {Link, Redirect} from "react-router-native";
 
 class ResetPass extends React.Component {
   state = {
@@ -62,89 +63,89 @@ class ResetPass extends React.Component {
   }
 
   render() {
-    if (this.props.loadingAuth || this.props.loadingOTP) {
-      return <Loader />;
-    }
-    if (this.props.resetted) return this.props.navigation.navigate("login");
-    else
-      return (
-        <>
-          <View style={styles.container}>
-            <Text style={styles.app}>SOCIO</Text>
-            <View style={styles.view}>
-              <Text style={styles.title}>Reset Password</Text>
-              {!this.props.otpSent && !this.props.otpVerified && (
-                <>
-                  <TextInput
-                    style={styles.textInput}
-                    placeholder="Email or Username."
-                    onChangeText={this.setEmail.bind(this)}
-                    value={this.state.email}
-                  />
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={this.sendOTP.bind(this)}
-                  >
-                    <Text style={styles.buttonText}>Send OTP</Text>
-                  </TouchableOpacity>
-                </>
-              )}
-              {this.props.otpSent && !this.props.otpVerified && (
-                <>
-                  <TextInput
-                    style={styles.textInput}
-                    placeholder="Confirm OTP."
-                    onChangeText={this.setOTP.bind(this)}
-                    value={this.state.otp}
-                  />
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={this.verifyOTP.bind(this)}
-                  >
-                    <Text style={styles.buttonText}>Verify OTP</Text>
-                  </TouchableOpacity>
-                </>
-              )}
-              {this.props.otpSent && this.props.otpVerified && (
-                <>
-                  <TextInput
-                    style={styles.textInput}
-                    placeholder="New Password."
-                    onChangeText={this.setPassword.bind(this)}
-                    value={this.state.password}
-                  />
-                  <TextInput
-                    style={styles.textInput}
-                    placeholder="Confirm Password."
-                    onChangeText={this.setPassword2.bind(this)}
-                    value={this.state.password2}
-                  />
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={this.resetPass.bind(this)}
-                  >
-                    <Text style={styles.buttonText}>Reset</Text>
-                  </TouchableOpacity>
-                </>
-              )}
-              <View style={styles.buttonGroup}>
+    if (this.props.loadingAuth || this.props.loadingOTP) return <Loader />;
+    if(this.props.resetted) return <Redirect to="/login" />
+
+    return (
+      <>
+        <View style={styles.container}>
+          <Text style={styles.app}>SOCIO</Text>
+          <View style={styles.view}>
+            <Text style={styles.title}>Reset Password</Text>
+            {!this.props.otpSent && !this.props.otpVerified && (
+              <>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Email or Username."
+                  onChangeText={this.setEmail.bind(this)}
+                  value={this.state.email}
+                />
                 <TouchableOpacity
-                  style={styles.button2}
-                  onPress={() => this.props.navigation.navigate("signup")}
+                  style={styles.button}
+                  onPress={this.sendOTP.bind(this)}
                 >
-                  <Text>Create Account</Text>
+                  <Text style={styles.buttonText}>Send OTP</Text>
                 </TouchableOpacity>
+              </>
+            )}
+            {this.props.otpSent && !this.props.otpVerified && (
+              <>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Confirm OTP."
+                  onChangeText={this.setOTP.bind(this)}
+                  value={this.state.otp}
+                />
                 <TouchableOpacity
-                  style={styles.button2}
-                  onPress={() => this.props.navigation.navigate("login")}
+                  style={styles.button}
+                  onPress={this.verifyOTP.bind(this)}
                 >
-                  <Text>Account Login</Text>
+                  <Text style={styles.buttonText}>Verify OTP</Text>
                 </TouchableOpacity>
-              </View>
+              </>
+            )}
+            {this.props.otpSent && this.props.otpVerified && (
+              <>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="New Password."
+                  onChangeText={this.setPassword.bind(this)}
+                  value={this.state.password}
+                  secureTextEntry
+                />
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Confirm Password."
+                  onChangeText={this.setPassword2.bind(this)}
+                  value={this.state.password2}
+                  secureTextEntry
+                />
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={this.resetPass.bind(this)}
+                >
+                  <Text style={styles.buttonText}>Reset</Text>
+                </TouchableOpacity>
+              </>
+            )}
+            <View style={styles.buttonGroup}>
+              <Link
+                style={styles.button2}
+                to="/signup"
+              >
+                <Text>Create Account</Text>
+              </Link>
+              <Link
+                style={styles.button2}
+                to="/login"
+              >
+                <Text>Account Login</Text>
+              </Link>
             </View>
           </View>
-        </>
-      );
+        </View>
+      </>
+    );
   }
 }
 

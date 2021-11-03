@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "socio",
+    "slug": "socio",
+    "owner": "aditya-yaduvanshi",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./app/assets/icon.png",
@@ -27,6 +28,8 @@
     },
     "web": {
       "favicon": "./app/assets/favicon.png"
-    }
+    },
+    "description": "This is mobile application in react native that is socio.",
+    "githubUrl": "https://github.com/aditya-yaduvanshi/social-network"
   }
 }
